@@ -156,6 +156,14 @@
       <version>1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-all -->
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-all</artifactId>
+      <version>1.2.4</version>
+    </dependency>
+
+
   </dependencies>
   <build>
     <finalName>myssm</finalName>
