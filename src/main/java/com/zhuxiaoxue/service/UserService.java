@@ -1,0 +1,62 @@
+package com.zhuxiaoxue.service;
+
+import com.google.common.collect.Maps;
+import com.zhuxiaoxue.mapper.RoleMapper;
+import com.zhuxiaoxue.mapper.UserLogMapper;
+import com.zhuxiaoxue.mapper.UserMapper;
+import com.zhuxiaoxue.pojo.User;
+import com.zhuxiaoxue.pojo.UserLog;
+import com.zhuxiaoxue.util.ShiroUtil;
+import org.joda.time.DateTime;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
+import java.util.Map;
+
+@Named
+public class UserService {
+
+    @Inject
+    private UserMapper userMapper;
+
+    @Inject
+    private UserLogMapper userLogMapper;
+
+    @Inject
+    private RoleMapper roleMapper;
+
+
+    public void saveUserLogin(String ip) {
+        UserLog userlog = new UserLog();
+        userlog.setLoginip(ip);
+        userlog.setLogintime(DateTime.now().toString("yyyy-MM-dd HH:mm"));
+        userlog.setUserid(ShiroUtil.getCurrentUserId());
+
+        userLogMapper.save(userlog);
+    }
+
+    public List<UserLog> findCurrentUserLog(String start, String length) {
+
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("userid",ShiroUtil.getCurrentUserId());
+        params.put("start",start);
+        params.put("length",length);
+
+        return userLogMapper.findByParams(params);
+
+    }
+
+    public Long findCurrentUserLogcount() {
+
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("userId",ShiroUtil.getCurrentUserId());
+        return userLogMapper.countByUserid(map);
+    }
+
+    public void changePassword(String password) {
+        User user = ShiroUtil.getCurrentUser();
+        user.setPassword(password);
+        userMapper.update(user);
+    }
+}

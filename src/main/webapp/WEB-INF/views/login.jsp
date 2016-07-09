@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -25,7 +26,8 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition login-page" style="background-image: url('/static/img/1.jpg');background-position:0% 80%;background-size: cover">
+<body class="hold-transition login-page"
+      style="background-image: url('/static/img/1.jpg');background-position:0% 80%;background-size: cover">
 <div class="login-box">
     <div class="login-logo">
         <a href="../../index2.html"><b>Eric</b>CRM</a>
@@ -33,6 +35,17 @@
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">用户登录</p>
+        <c:if test="${not empty message}">
+            <c:choose>
+                <c:when test="${message.state == 'success'}">
+                    <div class="alert alert-success">${message.message}</div>
+                </c:when>
+                <c:when test="${message.state == 'error'}">
+                    <div class="alert alert-danger">${message.message}</div>
+                </c:when>
+            </c:choose>
+        </c:if>
+
 
         <form action="/" method="post">
             <div class="form-group has-feedback">

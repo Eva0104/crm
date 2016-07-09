@@ -6,6 +6,9 @@
 <mapper namespace="com.zhuxiaoxue.mapper.UserMapper">
 
     <cache/>
+    <update id="update">
+        UPDATE t_user SET username=#{username},password=#{password},realname=#{realname},weixin=#{weixin},enable=#{enable}
+    </update>
 
     <select id="findByUsername" resultType="User">
         SELECT * from t_user WHERE username = #{username}
