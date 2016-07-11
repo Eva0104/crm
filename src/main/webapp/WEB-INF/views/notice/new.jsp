@@ -31,30 +31,41 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <%@include file="include/mainHeader.jsp"%>
-    <jsp:include page="include/leftSide.jsp">
-        <jsp:param name="menu" value="home"/>
+    <%@include file="../include/mainHeader.jsp"%>
+    <jsp:include page="../include/leftSide.jsp">
+        <jsp:param name="menu" value="notice"/>
     </jsp:include>
-    
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                首页
-                <small>客户关系管理系统</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                <li class="active">Here</li>
-            </ol>
+            <h1> 发布公告</h1>
         </section>
 
         <!-- Main content -->
         <section class="content">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">新增公告</h3>
+                </div>
+                <div class="box-body">
+                    <form id="newForm" method="post">
+                        <div class="form-group">
+                            <label>标题</label>
+                            <input class="form-control" type="text" name="title" id="title">
+                        </div>
+                        <div class="form-group">
+                            <label>公告内容</label>
+                            <textarea class="form-control" rows="10" type="text" name="context" id="context"></textarea>
+                        </div>
+                    </form>
+                </div>
 
-            <!-- Your Page Content Here -->
-
+                <div class="box-footer">
+                    <button class="btn btn-primary pull-right" id="saveBtn">发表</button>
+                </div>
+            </div>
         </section>
         <!-- /.content -->
     </div>
@@ -71,6 +82,25 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
+
+<script>
+    $(function(){
+
+        $("#saveBtn").click(function(){
+            if(!$("#title").val()){
+                $("#title").focus();
+                return;
+            }
+            if(!$("#context").val()){
+                $("#context").focus();
+                return;
+            }
+
+            $("#newForm").submit();
+        });
+
+    });
+</script>
 
 </body>
 </html>

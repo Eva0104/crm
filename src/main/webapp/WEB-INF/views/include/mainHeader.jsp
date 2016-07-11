@@ -138,7 +138,7 @@
                         <li class="user-body">
                             <div class="row">
                                 <div class="col-xs-4 text-center">
-                                    <a href="/user/loginLog">查看登录记录</a>
+                                    <a href="/user/loginLog">登录记录</a>
                                 </div>
                                 <div class="col-xs-4 text-center">
                                     <a href="/user/password">修改密码</a>

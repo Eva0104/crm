@@ -117,6 +117,11 @@ public class AdminController {
 
     }
 
+    /**
+     * 编辑用户信息
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "/users/edit",method = RequestMethod.POST)
     @ResponseBody
     public String editUser(User user){
