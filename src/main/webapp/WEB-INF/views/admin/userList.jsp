@@ -71,6 +71,8 @@
     </div>
 </div>
 
+<%--addModal--%>
+
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,6 +116,54 @@
     </div>
 </div>
 
+<%--editModal--%>
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增用户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" name="id" id="edit_user_id">
+                    <div class="form-group">
+                        <label>账号(用于系统登录)</label>
+                        <input class="form-control" type="text" name="username" id="edit_user_username">
+                    </div>
+                    <div class="form-group">
+                        <label>员工姓名(真实姓名)</label>
+                        <input class="form-control" type="text" name="realname" id="edit_user_realname">
+                    </div>
+                    <div class="form-group">
+                        <label>微信号</label>
+                        <input class="form-control" type="text" name="weixin" id="edit_user_weixin">
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select class="form-control" name="enable" id="edit_user_enable">
+                            <option value="true">正常</option>
+                            <option value="false">禁用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>角色</label>
+                        <select class="form-control" name="roleid" id="edit_user_roleid">
+                            <c:forEach items="${roleList}" var="role">
+                                <option value="${role.id}">${role.rolename}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="editBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
@@ -126,6 +176,7 @@
 
 <script>
     $(function(){
+        //用户列表
         var dataTable = $("#userTable").DataTable({
             serverSide:true,
             ajax:"/admin/users/load",
@@ -139,9 +190,9 @@
                 {"data":"role.rolename"},
                 {"data":function(row){
                     if(row.enable){
-                        return "<span class='lable lable-success'>正常</span>";
+                        return "<span class='label label-success'>正常</span>";
                     }else{
-                        return "<span class='lable lable-success'>禁用</span>";
+                        return "<span class='label label-danger'>禁用</span>";
                     }
                 }},
                 {"data":function(row){
@@ -150,7 +201,12 @@
                     return date.format("YYYY-MM-DD HH:mm");
                 }},
                 {"data":function(row){
-                    return "#";
+                    if(row.username == "admin"){
+                        return "";
+                    }else{
+                        return "<a href='javaScript:;' class='resetPwd' rel='"+row.id+"'>重置密码</a>&nbsp;&nbsp;" +
+                                "<a href='javaScript:;' class='edit' rel='"+row.id+"'>编辑</a>";
+                    }
                 }}
             ],
             "language": {
@@ -170,7 +226,7 @@
                 }
             }
         });
-
+        //新增用户
         $("#addForm").validate({
             errorElemrnt:"span",
             errorClass:"text-danger",
@@ -233,6 +289,82 @@
                 keyboard:false
             });
         });
+
+        //重置密码
+        $(document).delegate(".resetPwd","click", function () {
+            var id = $(this).attr("rel");
+            if(confirm("确认将密码重置为：000000 ?")){
+                $.post("/admin/users/resetpassword", {"id":id}).done(function(data){
+                    if(data == "success"){
+                        alert("重置密码成功！");
+                    }
+                }).fail(function(){
+                    alert("服务器异常！");
+                });
+            }
+        });
+
+        //编辑
+        $("#editForm").validate({
+            errorElemrnt:"span",
+            errorClass:"text-danger",
+            rules:{
+                realname:{
+                    required:true,
+                    rangelength:[2,18]
+                },
+                weixin:{
+                    required:true
+                }
+            },
+            messages:{
+                realname:{
+                    required:"请输入员工真实姓名",
+                    rangelength:"真实姓名长度为2~18位"
+                },
+                weixin:{
+                    required:"请输入微信号"
+                }
+            },
+            submitHandler:function(form){
+                $.post("/admin/users/edit",$(form).serialize()).done(function(data){
+                    if(data == "success"){
+                        $("#editModal").modal("hide");
+                        dataTable.ajax.reload();
+                    }
+                }).fail(function(){
+                    alert("请求服务器异常！");
+                })
+            }
+        });
+
+        $(document).delegate(".edit","click",function(){
+            var id = $(this).attr("rel");
+            $.get("/admin/users/"+id+".json").done(function(result){
+                if(result.state == "success"){
+                    $("#edit_user_id").val(result.data.id);
+                    $("#edit_user_username").val(result.data.username);
+                    $("#edit_user_realname").val(result.data.realname);
+                    $("#edit_user_weixin").val(result.data.weixin);
+                    $("#edit_user_roleid").val(result.data.roleid);
+                    $("#edit_user_enable").val(result.data.enable.toString());
+
+                    $("#editModal").modal({
+                        show:true,
+                        dropback:'static'
+                    });
+                }else {
+                    alert(result.message);
+                }
+            }).fail(function(){
+                alert("服务器异常！");
+            })
+        });
+        $("#editBtn").click(function(){
+            $("#editForm").submit();
+        });
+
+
     });
 </script>
 

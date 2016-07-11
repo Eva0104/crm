@@ -10,8 +10,28 @@
         INSERT INTO t_user (username, password, realname, weixin,roleid)
         VALUES (#{username},#{password},#{realname},#{weixin},#{roleid})
     </insert>
+
     <update id="update">
-        UPDATE t_user SET username=#{username},password=#{password},realname=#{realname},weixin=#{weixin},enable=#{enable}
+        UPDATE t_user
+        <set>
+            <if test="username != null and username != ''">
+                username=#{username},
+            </if>
+            <if test="password != null and password != ''">
+                password=#{password},
+            </if>
+            <if test="realname != null and realname != ''">
+                realname=#{realname},
+            </if>
+            <if test="weixin != null and weixin != ''">
+                weixin=#{weixin},
+            </if>
+            <if test="roleid != null and roleid != ''">
+                roleid=#{roleid},
+            </if>
+            enable=#{enable}
+        </set>
+        where id=#{id}
     </update>
 
     <select id="findByUsername" resultType="User">
@@ -43,5 +63,9 @@
         </where>
         order by id desc
         limit ${start},${length}
+    </select>
+
+    <select id="findUserById" resultType="User">
+        select * from t_user where id=#{id};
     </select>
 </mapper>

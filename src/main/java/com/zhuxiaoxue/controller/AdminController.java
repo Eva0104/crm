@@ -2,11 +2,13 @@ package com.zhuxiaoxue.controller;
 
 import com.google.common.collect.Maps;
 import com.zhuxiaoxue.dto.DataTableReasult;
+import com.zhuxiaoxue.dto.JsonResult;
 import com.zhuxiaoxue.pojo.User;
 import com.zhuxiaoxue.service.UserService;
 import com.zhuxiaoxue.util.Strings;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -85,5 +87,43 @@ public class AdminController {
         userService.addUser(user);
         return "success";
     }
+
+    /**
+     * 重置密码
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/users/resetpassword",method = RequestMethod.POST)
+    @ResponseBody
+    public String resetpassword(Integer id){
+        userService.resetPasswordById(id);
+        return "success";
+    }
+
+    /**
+     * 根据用户ID显示用户JSON
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/users/{id:\\d+}.json",method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult showUser(@PathVariable Integer id){
+        User user = userService.findUserById(id);
+        if(user == null){
+            return new JsonResult("找不到"+id+"对应的用户");
+        }else{
+            return new JsonResult(user);
+        }
+
+    }
+
+    @RequestMapping(value = "/users/edit",method = RequestMethod.POST)
+    @ResponseBody
+    public String editUser(User user){
+        userService.updateUser(user);
+        return "success";
+    }
+
+
 
 }
