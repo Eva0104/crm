@@ -4,9 +4,11 @@ import com.google.common.collect.Maps;
 import com.zhuxiaoxue.mapper.RoleMapper;
 import com.zhuxiaoxue.mapper.UserLogMapper;
 import com.zhuxiaoxue.mapper.UserMapper;
+import com.zhuxiaoxue.pojo.Role;
 import com.zhuxiaoxue.pojo.User;
 import com.zhuxiaoxue.pojo.UserLog;
 import com.zhuxiaoxue.util.ShiroUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -58,5 +60,30 @@ public class UserService {
         User user = ShiroUtil.getCurrentUser();
         user.setPassword(password);
         userMapper.update(user);
+    }
+
+    public List<User> findUserlistByParams(Map<String, Object> params) {
+        return userMapper.findAllByParams(params);
+    }
+
+    public Long findUserCount() {
+        return userMapper.count();
+    }
+
+    public Long findUserCountByParams(Map<String, Object> params) {
+        return userMapper.countByParams(params);
+    }
+
+    public List<Role> findAllRole() {
+        return roleMapper.findAll();
+    }
+
+    public void addUser(User user) {
+        user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+        userMapper.save(user);
+    }
+
+    public User findUserByUsername(String username) {
+        return userMapper.findByUsername(username);
     }
 }

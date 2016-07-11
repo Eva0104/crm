@@ -90,6 +90,7 @@
             searching:false,
             serverSide:true,
             ajax:"/user/loginLog/load",
+            ordering:false,
             columns:[
                 {"data":"logintime"},
                 {"data":"loginip"}

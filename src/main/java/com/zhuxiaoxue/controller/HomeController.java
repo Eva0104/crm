@@ -5,6 +5,7 @@ import com.zhuxiaoxue.pojo.UserLog;
 import com.zhuxiaoxue.service.UserService;
 import com.zhuxiaoxue.util.ServletUtil;
 import com.zhuxiaoxue.util.ShiroUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -25,11 +26,23 @@ public class HomeController {
     @Inject
     private UserService userService;
 
+    /**
+     * 到登录界面
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
         return "/login";
     }
 
+    /**
+     * 登录验证用户名和密码是否正确
+     * @param username
+     * @param password
+     * @param redirectAttributes
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String login(String username, String password,
                         RedirectAttributes redirectAttributes,
@@ -40,7 +53,7 @@ public class HomeController {
             subject.logout();
         }
         try {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, DigestUtils.md5Hex(password));
             subject.login(usernamePasswordToken);
 
             userService.saveUserLogin(ServletUtil.getRemoteIp(request));
@@ -53,11 +66,20 @@ public class HomeController {
         return "redirect:/";
     }
 
+    /**
+     * 重定向到home
+     * @return
+     */
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home() {
         return "/home";
     }
 
+    /**
+     * 安全退出
+     * @param redirectAttributes
+     * @return
+     */
     @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
     public String logout(RedirectAttributes redirectAttributes) {
         SecurityUtils.getSubject().logout();

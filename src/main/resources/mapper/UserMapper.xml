@@ -6,11 +6,42 @@
 <mapper namespace="com.zhuxiaoxue.mapper.UserMapper">
 
     <cache/>
+    <insert id="save">
+        INSERT INTO t_user (username, password, realname, weixin,roleid)
+        VALUES (#{username},#{password},#{realname},#{weixin},#{roleid})
+    </insert>
     <update id="update">
         UPDATE t_user SET username=#{username},password=#{password},realname=#{realname},weixin=#{weixin},enable=#{enable}
     </update>
 
     <select id="findByUsername" resultType="User">
         SELECT * from t_user WHERE username = #{username}
+    </select>
+
+    <select id="findAllByParams" resultType="User">
+        SELECT t_user.*,t_role.id AS 'role.id',t_role.rolename AS 'role.rolename' FROM t_user
+        INNER JOIN t_role ON t_user.roleid = t_role.id
+        <where>
+            <if test="username != null and username != ''">
+                username LIKE CONCAt('%',#{username},'%') or realname LIKE CONCAt('%',#{username},'%')
+            </if>
+        </where>
+        order by t_user.id desc
+        limit ${start},${length}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM t_user;
+    </select>
+
+    <select id="countByParams" resultType="long">
+        SELECT COUNT(*) FROM t_user
+        <where>
+            <if test="username != null and username != ''">
+                username LIKE CONCAt('%',#{username},'%') or realname LIKE CONCAt('%',#{username},'%')
+            </if>
+        </where>
+        order by id desc
+        limit ${start},${length}
     </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.zhuxiaoxue.mapper.RoleMapper;
 import com.zhuxiaoxue.mapper.UserMapper;
 import com.zhuxiaoxue.pojo.Role;
 import com.zhuxiaoxue.pojo.User;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
