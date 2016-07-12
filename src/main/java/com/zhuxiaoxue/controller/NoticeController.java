@@ -34,13 +34,13 @@ public class NoticeController {
         String draw = request.getParameter("draw");
         String start = request.getParameter("start");
         String length = request.getParameter("length");
-        String title = request.getParameter("search[value]");
+        String keyword = request.getParameter("search[value]");
 
-        title = Strings.toUTF8(title);
+        keyword = Strings.toUTF8(keyword);
         Map<String,Object> params = Maps.newHashMap();
         params.put("start",start);
         params.put("length",length);
-        params.put("title",title);
+        params.put("keyword",keyword);
 
         List<Notice> noticeList = noticeService.findNoticeByParams(params);
         Long count = noticeService.findCount();
@@ -58,7 +58,6 @@ public class NoticeController {
     }
 
     @RequestMapping(value = "/new",method = RequestMethod.POST)
-    @ResponseBody
     public String addNotice(Notice notice){
         noticeService.addNotice(notice);
         return "notice/list";

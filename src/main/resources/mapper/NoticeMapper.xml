@@ -13,10 +13,11 @@
     <select id="findNoticeByParams" resultType="Notice">
         SELECT * FROM t_notice
         <where>
-            <if test="title != null and title != ''">
-                title LIKE CONCAT('%',#{title},'%');
+            <if test="keyword != null and keyword != ''">
+                title LIKE CONCAT('%',#{keyword},'%')
             </if>
         </where>
+        order by id desc
         limit ${start},${length}
     </select>
 
@@ -27,8 +28,8 @@
     <select id="findFilterCount" resultType="long">
         SELECT COUNT(*) FROM t_notice
         <where>
-            <if test="title != null and title != ''">
-                title LIKE CONCAT('%',#{title},'%');
+            <if test="keyword != null and keyword != ''">
+                title LIKE CONCAT('%',#{keyword},'%')
             </if>
         </where>
         limit ${start},${length}

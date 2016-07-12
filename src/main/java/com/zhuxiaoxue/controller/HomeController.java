@@ -86,4 +86,13 @@ public class HomeController {
         redirectAttributes.addFlashAttribute("message",new FlashMessage(FlashMessage.STATE_SUCCESS,"安全退出"));
         return "redirect:/";
     }
+
+    /**
+     * 添加403错误页
+     * @return
+     */
+    @RequestMapping(value = "/403",method = RequestMethod.GET)
+    public String error403(){
+        return "error/403";
+    }
 }

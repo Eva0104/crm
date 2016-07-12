@@ -49,7 +49,7 @@
 
         <form action="/" method="post">
             <div class="form-group has-feedback">
-                <input type="text" class="form-control" placeholder="账号" name="username">
+                <input type="text" class="form-control" autofocus placeholder="账号" name="username">
                 <span class="glyphicon glyphicon-user form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">

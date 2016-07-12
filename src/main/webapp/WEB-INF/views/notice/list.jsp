@@ -86,21 +86,23 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
-<script src="/static/plugins/moment/moment.js"></script>
+
 <script src="/static/plugins/dataTables/js/jquery.dataTables.min.js"></script>
 <script src="/static/plugins/dataTables/js/dataTables.bootstrap.min.js"></script>
-
+<script src="/static/plugins/moment/moment.js"></script>
 <script>
     $(function(){
 
-        $("#noticeTable").DataTable({
+        var dataTable = $("#noticeTable").DataTable({
             serverSide:true,
             ajax:"/notice/list",
-            "autoWidth": false,
+            autoWidth: false,
             columns:[
                 {"data":"id"},
                 {"data":"title"},
-                {"data":"context"},
+                {"data":function(row){
+                        return row.context;
+                }},
                 {"data":function(row){
                     var timestemp = row.createtime;
                     var date = moment(timestemp);
