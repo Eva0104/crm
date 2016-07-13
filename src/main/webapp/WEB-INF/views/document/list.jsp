@@ -175,8 +175,11 @@
 
         //返回上一级
         $("#backBtn").click(function(){
-            window.location.href="/doc/back/"+${fid}
+            <%--window.location.href="/doc/back/"+${fid}--%>
+            history.go(-1);
         });
+
+
 
     })
 </script>
