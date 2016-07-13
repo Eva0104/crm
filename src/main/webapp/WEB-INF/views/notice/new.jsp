@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EricCRM</title>
+    <title>EricCRM-新增公告</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -21,6 +21,8 @@
     -->
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" type="text/css" href="/static/plugins/simditor/styles/simditor.css" />
+
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -82,10 +84,16 @@
 <script type="text/javascript" src="/static/plugins/simditor/scripts/uploader.js"></script>
 <script type="text/javascript" src="/static/plugins/simditor/scripts/simditor.js"></script>
 
+
 <script>
     $(function(){
         var edit = new Simditor({
-            textarea:$("#context")
+            textarea:$("#context"),
+            placeholder: '在此处编辑公告内容',
+            upload:{
+                url:'/notice/img/load',
+                fileKey:'file'
+            }
         });
 
         $("#saveBtn").click(function(){

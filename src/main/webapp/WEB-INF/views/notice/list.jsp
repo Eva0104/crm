@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EricCRM</title>
+    <title>EricCRM-公告</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -57,9 +57,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>标题</th>
-                                <th>公告内容</th>
                                 <th>公布时间</th>
-                                <th>发布人ID</th>
                                 <th>发布人</th>
                                 <th>#</th>
                             </tr>
@@ -97,18 +95,17 @@
             serverSide:true,
             ajax:"/notice/list",
             autoWidth: false,
+            ordering:false,
             columns:[
                 {"data":"id"},
-                {"data":"title"},
                 {"data":function(row){
-                        return row.context;
+                    return "<a href='/notice/"+row.id+"'>"+row.title+"</a>";
                 }},
                 {"data":function(row){
                     var timestemp = row.createtime;
                     var date = moment(timestemp);
                     return date.format("YYYY-MM-DD HH:mm");
                 }},
-                {"data":"userid"},
                 {"data":"realname"}
             ],
             "language": {

@@ -34,4 +34,8 @@
         </where>
         limit ${start},${length}
     </select>
+
+    <select id="findById" resultType="Notice">
+        SELECT * FROM t_notice WHERE id=#{id}
+    </select>
 </mapper>
