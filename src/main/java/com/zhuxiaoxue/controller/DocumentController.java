@@ -94,4 +94,22 @@ public class DocumentController {
                 .body(new InputStreamResource(fileInputStream));
     }
 
+    /**
+     * 返回上一级
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/back/{id:\\d+}",method = RequestMethod.GET)
+    public String goBack(@PathVariable Integer id,Model model){
+
+        Document document = documentService.findAllById(id);
+
+        Integer fid = document.getFid();
+
+        model.addAttribute("fid",fid);
+        return "redirect:/doc";
+
+    }
+
 }

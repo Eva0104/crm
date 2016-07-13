@@ -173,6 +173,11 @@
             $("#uploadBtn .text").html('<i class="fa fa-upload"></i> 上传文件');
         });
 
+        //返回上一级
+        $("#backBtn").click(function(){
+            window.location.href="/doc/back/"+${fid}
+        });
+
     })
 </script>
 </body>
