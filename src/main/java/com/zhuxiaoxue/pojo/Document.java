@@ -1,8 +1,9 @@
 package com.zhuxiaoxue.pojo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Document {
+public class Document implements Serializable{
 
     public static final String TYPE_DOC = "doc";
     public static final String TYPE_DIR = "dir";

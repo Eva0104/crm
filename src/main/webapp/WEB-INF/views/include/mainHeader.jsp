@@ -131,7 +131,7 @@
 
                             <p>
                                 <shiro:principal property="realname"/>
-                                <small>Member since Nov. 2012</small>
+                                <small>没有什么不可能</small>
                             </p>
                         </li>
                         <!-- Menu Body -->
