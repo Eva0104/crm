@@ -22,9 +22,11 @@ public interface CustomerMapper {
 
     Customer findByid(Integer companyid);
 
-    List<Customer> findByCustomerid(Integer id);
+    List<Customer> findByCompanyid(Integer id);
 
     void delById(Integer id);
 
     void updateByid(Customer customer);
+
+    Customer findCustomerById(Integer id);
 }

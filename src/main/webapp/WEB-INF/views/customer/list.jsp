@@ -143,6 +143,72 @@
     </div>
 </div>
 
+<%--editModal--%>
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">编辑客户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+
+                    <input type="hidden" name="userid" id="edit_userid">
+                    <input type="hidden" name="id" id="edit_id">
+                    <input type="hidden" name="type" id="edit_type">
+
+                    <div class="form-group">
+                        <label>客户名称</label>
+                        <input class="form-control" type="text" name="name" id="edit_name">
+                    </div>
+                    <div class="form-group">
+                        <label>联系方式</label>
+                        <input class="form-control" type="text" name="tel" id="edit_tel">
+                    </div>
+                    <div class="form-group">
+                        <label>等级</label>
+                        <select class="form-control" name="level" id="edit_level">
+                            <option value=""></option>
+                            <option value="★">★</option>
+                            <option value="★★">★★</option>
+                            <option value="★★★">★★★</option>
+                            <option value="★★★★">★★★★</option>
+                            <option value="★★★★★">★★★★★</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>地址</label>
+                        <input class="form-control" type="text" name="address" id="edit_address">
+                    </div>
+                    <div class="form-group">
+                        <label>微信号</label>
+                        <input class="form-control" type="text" name="weixin" id="edit_weixin">
+                    </div>
+                    <div class="form-group">
+                        <label>电子邮箱</label>
+                        <input type="text" class="form-control" name="email" id="edit_email">
+                    </div>
+                    <div class="form-group" id="editcompanyList">
+                        <label>所属公司</label>
+                        <select class="form-control" name="companyid" id="edit_company">
+                            <option value=""></option>
+                            <c:forEach items="${companyList}" var="company">
+                                <option value="${company.id}">${company.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="editBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 2.2.3 -->
@@ -271,6 +337,82 @@
                     alert("服务器异常！")
                 });
             }
+        });
+
+        //编辑客户信息
+
+        $("#editForm").validate({
+            errorElemrnt:"span",
+            errorClass:"text-danger",
+            rules:{
+                name:{
+                    required:true
+                },
+                tel:{
+                    required:true
+                },
+                address:{
+                    required:true
+                }
+            },
+            messages:{
+                name:{
+                    required:"请输入客户名称",
+                    remote:"该客户已存在"
+                },
+                tel:{
+                    required:"请输入客户联系方式"
+                },
+                address:{
+                    required:"请输入客户地址"
+                }
+            },
+            submitHandler:function(form){
+                $.post("/customer/edit",$(form).serialize()).done(function(data){
+                    if(data == "success"){
+                        $("#editModal").modal("hide");
+                        location.reload();
+                    }
+                }).fail(function(){
+                    alert("请求服务器异常！");
+                })
+            }
+        });
+        $(document).delegate(".editLink","click",function(){
+            var id = $(this).attr("rel");
+            $.get("/customer/edit/"+id+".json").done(function(result){
+
+                if("success" == result.state){
+                    if(result.data.type == "company"){
+                        $("#editcompanyList").hide();
+                    }else{
+                        $("#editcompanyList").show();
+                    }
+
+                    $("#edit_userid").val(result.data.userid);
+                    $("#edit_id").val(result.data.id);
+                    $("#edit_type").val(result.data.type);
+                    $("#edit_tel").val(result.data.tel);
+                    $("#edit_name").val(result.data.name);
+                    $("#edit_address").val(result.data.address);
+                    $("#edit_company").val(result.data.companyid);
+                    $("#edit_level").val(result.data.level);
+                    $("#edit_weixin").val(result.data.weixin);
+                    $("#edit_email").val(result.data.email);
+
+                    $("#editModal").modal({
+                        show:true,
+                        backdrop:'static'
+                    });
+                }
+
+            }).fail(function(){
+
+            });
+        });
+
+        $("#editBtn").click(function(){
+            $("#editForm").submit();
         });
 
     })

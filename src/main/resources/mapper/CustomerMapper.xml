@@ -54,7 +54,10 @@
         SELECT * FROM t_customer WHERE id=#{companyid}
     </select>
 
-    <select id="findByCustomerid" resultType="com.zhuxiaoxue.pojo.Customer">
+    <select id="findByCompanyid" resultType="com.zhuxiaoxue.pojo.Customer">
         SELECT * FROM t_customer WHERE companyid = #{id}
+    </select>
+    <select id="findCustomerById" resultType="com.zhuxiaoxue.pojo.Customer">
+        select * from t_customer WHERE id=#{id};
     </select>
 </mapper>

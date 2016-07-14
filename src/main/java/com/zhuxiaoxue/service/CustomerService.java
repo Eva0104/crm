@@ -80,18 +80,46 @@ public class CustomerService {
         Customer customer = customerMapper.findByid(id);
         if (customer != null) {
             if (customer.getType().equals(Customer.CUSTOMER_COMPANY)) {
-                List<Customer> customerList = customerMapper.findByCustomerid(id);
+//                List<Customer> customerList = customerMapper.findByCustomerid(id);
+                List<Customer> customerList = customerMapper.findByCompanyid(id);
 
                 for (Customer cust : customerList) {
                     cust.setCompanyid(null);
                     cust.setCompanyname(null);
                     customerMapper.updateByid(cust);
                 }
-
             }
             //TODO 删除关联的项目
             //TODO 删除关联的代办事项
             customerMapper.delById(id);
         }
+    }
+
+    public Customer findById(Integer id) {
+        return customerMapper.findCustomerById(id);
+    }
+
+    /**
+     * 修改客戶信息
+     * @param customer
+     */
+    public void update(Customer customer) {
+
+        if(customer.getType().equals(Customer.CUSTOMER_COMPANY)){
+            List<Customer> customerList = customerMapper.findByCompanyid(customer.getId());
+            for(Customer cust : customerList){
+                cust.setCompanyid(customer.getId());
+                cust.setCompanyname(customer.getName());
+
+                customerMapper.updateByid(cust);
+            }
+        }else {
+            if(customer.getCompanyid() != null){
+                Customer company = customerMapper.findByid(customer.getCompanyid());
+                customer.setCompanyname(company.getName());
+            }
+        }
+        customer.setPinyin(Strings.toPinyin(customer.getName()));
+        customerMapper.updateByid(customer);
     }
 }

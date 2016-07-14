@@ -2,6 +2,8 @@ package com.zhuxiaoxue.controller;
 
 import com.google.common.collect.Maps;
 import com.zhuxiaoxue.dto.DataTableReasult;
+import com.zhuxiaoxue.dto.JsonResult;
+import com.zhuxiaoxue.exception.NotFoundException;
 import com.zhuxiaoxue.pojo.Customer;
 import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.util.ShiroUtil;
@@ -76,5 +78,27 @@ public class CustomerController {
         customerService.delCustomerById(id);
         return "success";
     }
+
+
+    @RequestMapping(value = "/edit/{id:\\d+}.json",method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResult showCustomer(@PathVariable Integer id){
+        Customer customer = customerService.findById(id);
+        if(customer == null){
+            throw new NotFoundException();
+        }
+        if(customer.getUserid() != null && customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+            throw new NotFoundException();
+        }
+        return new JsonResult(customer);
+    }
+
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @ResponseBody
+    public String updateCustomer(Customer customer){
+        customerService.update(customer);
+        return "success";
+    }
+
 
 }
