@@ -35,7 +35,9 @@
     </update>
 
     <select id="findByUsername" resultType="User">
-        SELECT * from t_user WHERE username = #{username}
+        SELECT t_user.*,t_role.id AS 'role.id',t_role.rolename AS 'role.rolename' from t_user
+        INNER JOIN t_role on t_user.roleid = t_role.id
+        WHERE t_user.username = #{username}
     </select>
 
     <select id="findAllByParams" resultType="User">

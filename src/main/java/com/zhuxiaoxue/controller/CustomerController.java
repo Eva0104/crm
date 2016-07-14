@@ -7,6 +7,7 @@ import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.util.ShiroUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,35 +26,54 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(Model model){
+        List<Customer> companyList = customerService.findAllCompany();
+        System.out.println(companyList);
+        model.addAttribute("companyList",companyList);
         return "/customer/list";
     }
+
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ResponseBody
     public DataTableReasult<Customer> showAll(HttpServletRequest request){
         String draw = request.getParameter("draw");
         String start = request.getParameter("start");
         String length = request.getParameter("length");
-        Integer userid = ShiroUtil.getCurrentUserId();
         String keyword = request.getParameter("search[value]");
 
         Map<String,Object> params = Maps.newHashMap();
         params.put("start",start);
         params.put("length",length);
         params.put("keyword",keyword);
-        params.put("userid",userid);
 
         List<Customer> customerList = customerService.findAllByParams(params);
-        Long count = customerService.findCount();
-        Long filterCount = customerService.findCountByParams(params);
+        Long count = customerService.count();
+        Long filterCount = customerService.countByParams(params);
 
         return new DataTableReasult<>(draw,customerList,count,filterCount);
     }
 
+    /**
+     * 保存新客户
+     * @param customer
+     * @return
+     */
     @RequestMapping(value = "/new",method = RequestMethod.POST)
     @ResponseBody
     public String addCustomer(Customer customer){
-        customer.setUserid(ShiroUtil.getCurrentUserId());
         customerService.addCustomer(customer);
+        return "success";
+    }
+
+
+    /**
+     * 删除客户
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
+    @ResponseBody
+    public String delCustomer(@PathVariable Integer id){
+        customerService.delCustomerById(id);
         return "success";
     }
 

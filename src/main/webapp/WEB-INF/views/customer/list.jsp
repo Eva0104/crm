@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -52,15 +53,11 @@
                     <table class="table" id="customerTable">
                         <thead>
                         <tr>
-                            <th>ID</th>
+                            <th></th>
                             <th>客户名称</th>
                             <th>联系方式</th>
-                            <th>微信号</th>
                             <th>电子邮箱</th>
-                            <th>地址</th>
                             <th>等级</th>
-                            <th>创建时间</th>
-                            <th>公司名称</th>
                             <th>#</th>
                         </tr>
                         </thead>
@@ -85,12 +82,34 @@
             <div class="modal-body">
                 <form id="addForm">
                     <div class="form-group">
+                        <label>类型</label>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" name="type" value = "person" id="personRadio" checked> 个人
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="type" value = "company" id="companyRadio"> 公司
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>客户名称</label>
                         <input class="form-control" type="text" name="name">
                     </div>
                     <div class="form-group">
                         <label>联系方式</label>
                         <input class="form-control" type="text" name="tel">
+                    </div>
+                    <div class="form-group">
+                        <label>等级</label>
+                        <select class="form-control" name="level">
+                            <option value=""></option>
+                            <option value="★">★</option>
+                            <option value="★★">★★</option>
+                            <option value="★★★">★★★</option>
+                            <option value="★★★★">★★★★</option>
+                            <option value="★★★★★">★★★★★</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>地址</label>
@@ -104,14 +123,16 @@
                         <label>电子邮箱</label>
                         <input type="text" class="form-control" name="email">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="companyList">
                         <label>所属公司</label>
-                        <input type="text" class="form-control" name="companyname">
+                        <select class="form-control" name="companyid">
+                            <option value=""></option>
+                            <c:forEach items="${companyList}" var="company">
+                                <option value="${company.id}">${company.name}</option>
+                            </c:forEach>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label>等级</label>
-                        <input type="text" class="form-control" name="level">
-                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -144,22 +165,27 @@
             ordering:false,
             "autoWidth": false,
             columns:[
-                {"data":"id"},
-                {"data":"name"},
+                {"data":function(row){
+                    if(row.type == "company"){
+                        return "<i class='fa fa-bank'></i>";
+                    }
+                    return "<i class='fa fa-user'></i>";
+                }},
+                {"data":function(row){
+                    if(row.companyname){
+                        return row.name + "-" + row.companyname;
+                    }
+                    return row.name;
+                }},
                 {"data":"tel"},
-                {"data":"weixin"},
                 {"data":"email"},
-                {"data":"address"},
                 {"data":"level"},
                 {"data":function(row){
-                    var timeStemp = row.creattime;
-                    var date = moment(timeStemp);
-                    return date.format("YYYY-MM-DD HH:mm");
-                }},
-                {"data":"companyname"}
+                    return "<a href='javascript:;' rel='"+row.id+"' class='editLink'>编辑</a> "<shiro:hasRole name="经理">+"<a href='javascript:;' rel='"+row.id+"' class='delLink'>刪除</a>"</shiro:hasRole>
+                }}
             ],
             "language": {
-                "search": "请输入员工姓名或账号",
+                "search": "请输入客户名称或联系方式",
                 "zeroRecords": "没有匹配的数据",
                 "lengthMenu": "显示 _MENU_ 条数据",
                 "info": "显示从 _START_ 到 _END_ 条数据 共 _TOTAL_ 条数据",
@@ -175,7 +201,6 @@
                 }
             }
         });
-
 
         $("#addBtn").click(function(){
             $("#addModal").modal({
@@ -196,9 +221,6 @@
                 },
                 address:{
                     required:true
-                },
-                weixin:{
-                    required:true
                 }
             },
             messages:{
@@ -211,9 +233,6 @@
                 },
                 address:{
                     required:"请输入客户地址"
-                },
-                weixin:{
-                    required:"请输入微信号"
                 }
             },
             submitHandler:function(form){
@@ -232,10 +251,29 @@
             $("#addForm").submit();
         });
 
+        $("#companyRadio").click(function(){
+            $("#companyList").hide();
+        });
 
+        $("#personRadio").click(function(){
+            $("#companyList").show();
+        });
+
+        //刪除客戶
+        $(document).delegate(".delLink","click",function(){
+            if(confirm("删除客户会自动删除关联数据，继续吗?")){
+                var id = $(this).attr("rel");
+                $.get("/customer/del/"+id).done(function (data) {
+                    if("success" == data){
+                        location.reload();
+                    }
+                }).fail(function () {
+                    alert("服务器异常！")
+                });
+            }
+        });
 
     })
-
 
 </script>
 

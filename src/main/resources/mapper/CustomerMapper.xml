@@ -6,33 +6,55 @@
         VALUES (#{name},#{weixin},#{tel},#{address},#{email},#{pinyin},#{companyname},#{companyid},#{level},#{type},#{userid})
     </insert>
 
-    <select id="findByUserId" resultType="Customer">
-        SELECT * FROM t_customer WHERE userid = #{userid} or userid =''
-    </select>
+    <update id="updateByid">
+        UPDATE t_customer SET name =#{name},weixin=#{weixin},tel=#{tel},address=#{address},email=#{email},
+        pinyin=#{pinyin},companyname=#{companyname},companyid=#{companyid},level=#{level},userid=#{userid}
+        where id=#{id}
+    </update>
+
+    <delete id="delById">
+        DELETE FROM t_customer WHERE id = #{id}
+    </delete>
 
     <select id="findByParams" resultType="Customer">
         SELECT * FROM t_customer
         <where>
-            userid = #{userid} or userid =''
-            <if test="keyword">
-             and name like CONCAT('%',#{keyword},'%') or pinyin like CONCAT('%',#{keyword},'%')
+            <if test="userid != null and userid != ''">
+                (userid = #{userid} or (userid ='' or userid is null))
+            </if>
+            <if test="keyword != null and keyword !=''">
+                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like concat('%',#{keyword},'%'))
             </if>
         </where>
+        order by id desc
         limit ${start},${length}
-
     </select>
-    <select id="findCountByParams" resultType="java.lang.Long">
+    <select id="countByParams" resultType="java.lang.Long">
         SELECT COUNT(*) FROM t_customer
         <where>
-        userid = #{userid} or userid =''
-        <if test="keyword">
-            and name like CONCAT('%',#{keyword},'%') or pinyin like CONCAT('%',#{keyword},'%')
-        </if>
-      </where>
-        limit ${start},${length}
+            <if test="userid != null and userid != ''">
+                userid = #{userid} or (userid ='' or userid is null)
+            </if>
+            <if test="keyword">
+                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like concat('%',#{keyword},'%'))
+            </if>
+        </where>
+        order by id desc
     </select>
 
     <select id="count" resultType="long">
         SELECT COUNT(*) FROM t_customer
+    </select>
+
+    <select id="findByType" resultType="Customer">
+        SELECT * FROM t_customer WHERE type = #{type}
+    </select>
+
+    <select id="findByid" resultType="Customer">
+        SELECT * FROM t_customer WHERE id=#{companyid}
+    </select>
+
+    <select id="findByCustomerid" resultType="com.zhuxiaoxue.pojo.Customer">
+        SELECT * FROM t_customer WHERE companyid = #{id}
     </select>
 </mapper>

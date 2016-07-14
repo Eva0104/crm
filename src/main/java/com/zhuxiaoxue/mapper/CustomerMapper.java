@@ -9,13 +9,22 @@ import java.util.Map;
  * Created by Eric on 2016/7/13.
  */
 public interface CustomerMapper {
-    List<Customer> findByUserId(Integer userid);
 
     void save(Customer customer);
 
     List<Customer> findByParams(Map<String, Object> params);
 
-    Long findCountByParams(Map<String, Object> params);
+    Long countByParams(Map<String, Object> params);
 
     Long count();
+
+    List<Customer> findByType(String type);
+
+    Customer findByid(Integer companyid);
+
+    List<Customer> findByCustomerid(Integer id);
+
+    void delById(Integer id);
+
+    void updateByid(Customer customer);
 }

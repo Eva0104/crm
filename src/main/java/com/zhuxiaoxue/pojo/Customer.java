@@ -3,6 +3,10 @@ package com.zhuxiaoxue.pojo;
 import java.sql.Timestamp;
 
 public class Customer {
+
+    public static final String CUSTOMER_COMPANY = "company";
+    public static final String CUSTOMER_PROPLE = "person";
+
     private Integer id;
     private String name;
     private Integer userid;
