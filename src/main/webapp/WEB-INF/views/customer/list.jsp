@@ -239,9 +239,9 @@
                 }},
                 {"data":function(row){
                     if(row.companyname){
-                        return row.name + "-" + row.companyname;
+                        return "<a href='/customer/"+row.id+"'>"+row.name+"</a>" + "-<a href='/customer/"+row.companyid+"'>" + row.companyname + "</a>";
                     }
-                    return row.name;
+                    return "<a href='/customer/"+row.id+"'>"+row.name+"</a>";
                 }},
                 {"data":"tel"},
                 {"data":"email"},

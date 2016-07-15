@@ -93,11 +93,52 @@ public class CustomerController {
         return new JsonResult(customer);
     }
 
+    /**
+     * 修改客户信息
+     * @param customer
+     * @return
+     */
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     @ResponseBody
     public String updateCustomer(Customer customer){
         customerService.update(customer);
         return "success";
+    }
+
+    /**
+     * 显示客户个人主页
+     * @param model
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
+    public String showCustomer(Model model,@PathVariable Integer id){
+        Customer customer = customerService.findById(id);
+
+        if(customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+            throw new NotFoundException();
+        }
+
+        model.addAttribute("customer",customer);
+        return "/customer/view";
+    }
+
+    /**
+     * 公开客户
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/open/{id:\\d+}",method = RequestMethod.GET)
+    public String openCustomer(@PathVariable Integer id){
+        Customer customer = customerService.findById(id);
+        if(customer == null){
+            throw new NotFoundException();
+        }
+        if(customer.getUserid() != null && customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+            customer.setUserid(null);
+            customerService.update(customer);
+        }
+        return "redirect:/customer";
     }
 
 
