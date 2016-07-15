@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>EricCRM-客户管理-${customer.name}</title>
+    <title>EricCRM-进度管理-${sales.name}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -24,7 +24,7 @@
 
     <%@include file="../include/mainHeader.jsp"%>
     <jsp:include page="../include/leftSide.jsp">
-        <jsp:param name="menu" value="customer"/>
+        <jsp:param name="menu" value="sales"/>
     </jsp:include>
 
     <!-- Content Wrapper. Contains page content -->
@@ -33,8 +33,8 @@
         <section class="content-header">
             <h1>　</h1>
             <ol class="breadcrumb">
-                <li><a href="/customer"><i class="fa fa-dashboard"></i>客户管理</a></li>
-                <li class="active">${customer.name}</li>
+                <li><a href="/customer"><i class="fa fa-dashboard"></i>进度管理</a></li>
+                <li class="active">${sales.name}</li>
             </ol>
         </section>
 
@@ -43,52 +43,27 @@
             <div class="box primary">
                 <div class="box-header">
                     <h3 class="box-title">
-                        <c:choose>
-                            <c:when test="${customer.type == 'person'}">
-                                <i class="fa fa-user"></i>
-                            </c:when>
-                            <c:when test="${customer.type == 'company'}">
-                                <i class="fa fa-bank"></i>
-                            </c:when>
-                        </c:choose>
-                        ${customer.name}
+                        ${sales.name}
                     </h3>
                     <div class="box-tools">
-                        <c:if test="${not empty customer.userid}">
-                            <button class="btn btn-danger btn-xs" id="openCust">公开客户</button>
-                            <button class="btn btn-info btn-xs" id="moveCust">转移客户</button>
-                        </c:if>
+                        <shiro:hasRole name="经理">
+                            <button class="btn btn-danger btn-xs" id="openCust">删除进度</button>
+                        </shiro:hasRole>
                     </div>
                 </div>
                 <div class="box-body">
                     <table class="table">
                         <tr>
-                            <td style="width: 100px">联系电话:</td>
-                            <td style="width: 200px">${customer.tel}</td>
-                            <td style="width: 100px">微信:</td>
-                            <td style="width: 200px">${customer.weixin}</td>
-                            <td style="width: 100px">电子邮件:</td>
-                            <td style="width: 200px">${customer.email}</td>
+                            <td style="width: 100px">关联客户:</td>
+                            <td style="width: 200px">${sales.custname}</td>
+                            <td style="width: 100px">金额:</td>
+                            <td style="width: 200px">￥${sales.price}</td>
                         </tr>
                         <tr>
-                            <td>等级</td>
-                            <td>${customer.level}</td>
-                            <td>地址</td>
-                            <td colspan="3">${customer.address}</td>
-                            <c:if test="${customer.type == 'person'}">
-                                <tr>
-                                    <td>所属公司</td>
-                                    <td colspan="5"><a href='/customer/${customer.companyid}'>${customer.companyname}</a></td>
-                                </tr>
-                            </c:if>
-                            <c:if test="${customer.type =='company'}">
-                                <tr>
-                                    <td>公司关联人</td>
-                                    <c:forEach items="${customerList}" var="person">
-                                        <td colspan="3"><a href="/customer/${person.id}">${person.name}</a></td>
-                                    </c:forEach>
-                                </tr>
-                            </c:if>
+                            <td style="width: 100px">当前进度：</td>
+                            <td style="width: 200px">${sales.progress}&nbsp;<a href="">修改</a></td>
+                            <td style="width: 100px">最后跟进时间：</td>
+                            <td colspan="4">${sales.lasttime}</td>
                         </tr>
                     </table>
                 </div>
@@ -98,10 +73,34 @@
                 <div class="col-md-8">
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-list"></i> 項目列表</h3>
+                            <h3 class="box-title"><i class="fa fa-list"></i> 跟进记录</h3>
+                            <div class="box-tools">
+                                <button class="btn btn-success btn-xs"><i class="fa fa-plus"></i>新增记录</button>
+                            </div>
                         </div>
                         <div class="box-body">
-                            <h5>暂无项目</h5>
+                            <ul class="timeline">
+                                <li>>
+                                    <i class="fa fa-envelope bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-weixin"></i> 12:05</span>
+
+                                        <h3 class="timeline-header"><a href="#">微信</a> ...</h3>
+                                    </div>
+                                </li>
+                                <li>>
+                                    <i class="fa fa-weixin bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+                                        <h3 class="timeline-header"><a href="#">Support Team</a> ...</h3>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <i class="fa fa-clock-o bg-gray"></i>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -109,13 +108,12 @@
                 <div class="col-md-4">
                     <div class="box box-default collapsed-box">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-qrcode"></i> 电子名片</h3>
+                            <h3 class="box-title"><i class="fa fa-file-o"></i> 相关资料</h3>
                             <div class="box-tools">
                                 <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="box-body" style="text-align: center">
-                            <img src="/customer/qrcode/${customer.id}">
                         </div>
                     </div>
 

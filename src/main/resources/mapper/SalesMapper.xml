@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhuxiaoxue.mapper.SalesMapper">
+    <insert id="save">
+        INSERT INTO t_sales (name, price, progress,lasttime, successtime, userid, custid, username, custname)
+        VALUES (#{name},#{price},#{progress},#{lasttime},#{successtime},#{userid},#{custid},#{username},#{custname})
+    </insert>
+
+    <select id="findAllByParams" resultType="Sales">
+        SELECT * FROM t_sales
+        <where>
+            <if test="userid != null and userid != ''">
+                userid = #{userid} or userid = '' or userid is null
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and progress = #{keyword}
+            </if>
+        </where>
+        limit ${start},${length}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM t_sales
+    </select>
+
+    <select id="countByparams" resultType="long">
+        SELECT COUNT(*) FROM t_sales
+        <where>
+            <if test="userid != null and userid != ''">
+                userid = #{userid} or userid = '' or userid is null
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and progress = #{keyword}
+            </if>
+        </where>
+    </select>
+    <select id="findByid" resultType="Sales">
+        select * from t_sales WHERE id=#{id};
+    </select>
+</mapper>

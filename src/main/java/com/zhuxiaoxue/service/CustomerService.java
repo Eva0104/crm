@@ -81,7 +81,6 @@ public class CustomerService {
         Customer customer = customerMapper.findByid(id);
         if (customer != null) {
             if (customer.getType().equals(Customer.CUSTOMER_COMPANY)) {
-//                List<Customer> customerList = customerMapper.findByCustomerid(id);
                 List<Customer> customerList = customerMapper.findByCompanyid(id);
 
                 for (Customer cust : customerList) {
@@ -179,5 +178,14 @@ public class CustomerService {
         }
         mecard.append(";");
         return mecard.toString();
+    }
+
+    public List<Customer> findAllCustomer() {
+
+        if(ShiroUtil.isEmployee()){
+            Integer userid = ShiroUtil.getCurrentUserId();
+            return customerMapper.findCustomerByUserId(userid);
+        }
+        return customerMapper.findAllCustomer();
     }
 }

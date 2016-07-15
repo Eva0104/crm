@@ -16,7 +16,6 @@ import com.zhuxiaoxue.pojo.User;
 import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.service.UserService;
 import com.zhuxiaoxue.util.ShiroUtil;
-import com.zhuxiaoxue.util.Strings;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
