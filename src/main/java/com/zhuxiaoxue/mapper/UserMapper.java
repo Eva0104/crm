@@ -23,4 +23,6 @@ public interface UserMapper {
     void save(User user);
 
     User findUserById(Integer id);
+
+    List<User> findAll();
 }

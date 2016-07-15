@@ -79,6 +79,14 @@
                                     <td colspan="5"><a href='/customer/${customer.companyid}'>${customer.companyname}</a></td>
                                 </tr>
                             </c:if>
+                            <c:if test="${customer.type =='company'}">
+                                <tr>
+                                    <td>公司关联人</td>
+                                    <c:forEach items="${customerList}" var="person">
+                                        <td colspan="3"><a href="/customer/${person.id}">${person.name}</a></td>
+                                    </c:forEach>
+                                </tr>
+                            </c:if>
                         </tr>
                     </table>
                 </div>
@@ -104,8 +112,8 @@
                                 <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
-                        <div class="box-body">
-                            <h5>暂无项目</h5>
+                        <div class="box-body" style="text-align: center">
+                            <img src="/customer/qrcode/${customer.id}">
                         </div>
                     </div>
 
@@ -127,7 +135,34 @@
 </div>
 <!-- ./wrapper -->
 
-
+<%--转移Modal--%>
+<div class="modal fade" id="moveModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">转移客户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="moveForm" action="/customer/moveCustomer" method="POST">
+                    <input type="hidden" value="${customer.id}" name="id">
+                    <div class="form-group">
+                        <label>把客户转移给的同事名字</label>
+                        <select class="form-control" name="userid">
+                            <c:forEach items="${userList}" var="user">
+                                <option value="${user.id}">${user.realname}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="moveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- REQUIRED JS SCRIPTS -->
 
@@ -151,8 +186,15 @@
         //转移客户
         $("#moveCust").click(function(){
             if(confirm("确认转移客户吗？")){
-
+                $("#moveModal").modal({
+                    show:true,
+                    backdrop:'static'
+                });
             }
+        });
+
+        $("#moveBtn").click(function(){
+            $("#moveForm").submit();
         });
 
 

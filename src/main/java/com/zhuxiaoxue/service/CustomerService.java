@@ -5,6 +5,7 @@ import com.zhuxiaoxue.mapper.CustomerMapper;
 import com.zhuxiaoxue.pojo.Customer;
 import com.zhuxiaoxue.util.ShiroUtil;
 import com.zhuxiaoxue.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -121,5 +122,62 @@ public class CustomerService {
         }
         customer.setPinyin(Strings.toPinyin(customer.getName()));
         customerMapper.updateByid(customer);
+    }
+
+    /**
+     * 公开客户
+     * @param customer
+     */
+    public void openCustomer(Customer customer){
+        customer.setUserid(null);
+        customerMapper.updateByid(customer);
+    }
+
+
+    /**
+     * 转移客户
+     * @param customer
+     * @param userid
+     */
+    public void moveCustomer(Customer customer,Integer userid){
+        customer.setUserid(userid);
+        customerMapper.updateByid(customer);
+    }
+
+    /**
+     * 根据公司ID查找对应公司的客户
+     * @param id
+     * @return
+     */
+    public List<Customer> findByCompanyId(Integer id) {
+        return customerMapper.findByCompanyid(id);
+    }
+
+    /**
+     * 将客户信息生成MeCard
+     * @param id
+     * @return
+     */
+    public String makeMeCard(Integer id){
+        Customer customer = customerMapper.findByid(id);
+        StringBuilder mecard = new StringBuilder("MECARD:");
+
+        if(StringUtils.isNotEmpty(customer.getName())){
+            mecard.append("N:" + customer.getName() + ";");
+        }
+        if(StringUtils.isNotEmpty(customer.getTel())){
+            mecard.append("TEL:"+customer.getTel()+ ";");
+        }
+        if(StringUtils.isNotEmpty(customer.getEmail())){
+            mecard.append("EMAIL:"+customer.getEmail()+ ";");
+        }
+        if(StringUtils.isNotEmpty(customer.getAddress())){
+            mecard.append("ADR:"+customer.getAddress()+ ";");
+        }
+        if(StringUtils.isNotEmpty(customer.getCompanyname())){
+            mecard.append("ORG:"+customer.getCompanyname()+ ";");
+        }
+        mecard.append(";");
+        return mecard.toString();
     }
 }

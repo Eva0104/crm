@@ -70,4 +70,8 @@
     <select id="findUserById" resultType="User">
         select * from t_user where id=#{id};
     </select>
+
+    <select id="findAll" resultType="User">
+        select * from t_user;
+    </select>
 </mapper>

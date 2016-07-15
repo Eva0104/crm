@@ -104,4 +104,8 @@ public class UserService {
     public void updateUser(User user) {
         userMapper.update(user);
     }
+
+    public List<User> findAll() {
+        return userMapper.findAll();
+    }
 }

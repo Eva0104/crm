@@ -268,6 +268,7 @@
             }
         });
 
+        //新增客户
         $("#addBtn").click(function(){
             $("#addModal").modal({
                 show:true,
@@ -407,7 +408,7 @@
                 }
 
             }).fail(function(){
-
+                alert("服务器异常！");
             });
         });
 
