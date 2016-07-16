@@ -6,7 +6,10 @@
         VALUES (#{name},#{contenttype},#{size},#{salesid})
     </insert>
 
-    <select id="findAllByid" resultType="SalesFile">
+    <select id="findAllBySalesid" resultType="SalesFile">
         SELECT * FROM t_salesfile WHERE salesid = #{id}
+    </select>
+    <select id="findAllByid" resultType="com.zhuxiaoxue.pojo.SalesFile">
+        SELECT * FROM t_salesfile WHERE id=#{id}
     </select>
 </mapper>

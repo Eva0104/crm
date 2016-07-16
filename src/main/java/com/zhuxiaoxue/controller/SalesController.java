@@ -10,6 +10,10 @@ import com.zhuxiaoxue.pojo.SalesLog;
 import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.service.SalesLogService;
 import com.zhuxiaoxue.service.SalesService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +34,9 @@ public class SalesController {
 
     @Inject
     private SalesService salesService;
+
+    @Value("${imagePath}")
+    private String savePath;
 
     @Inject
     private SalesLogService salesLogService;
@@ -131,7 +138,13 @@ public class SalesController {
     }
 
 
-
+    /**
+     * 上传相关文件
+     * @param file
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/{id:\\d+}/fileUpload",method = RequestMethod.POST)
     @ResponseBody
     public String saveFile(MultipartFile file, @PathVariable Integer id) throws IOException {
@@ -141,6 +154,37 @@ public class SalesController {
             throw new NotFoundException();
         }
         return "success";
+    }
+
+    /**
+     * 下载文件
+     * @param id
+     * @return
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/{id:\\d+}/downLoad",method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downLoad(@PathVariable Integer id) throws FileNotFoundException, UnsupportedEncodingException {
+
+        SalesFile salesFile = salesService.findSalesFileByid(id);
+
+        File file = new File(savePath,salesFile.getName());
+
+        if(!file.exists()){
+            throw new NotFoundException();
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        String fileName = salesFile.getName();
+        fileName = new String(fileName.getBytes("UTF-8"),"ISO8859-1");
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(salesFile.getContenttype()))
+                .contentLength(file.length())
+                .header("Content-Disposition","attachment;filename=\""+fileName+"\"")
+                .body(new InputStreamResource(fileInputStream));
+
     }
 
 }

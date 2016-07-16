@@ -123,7 +123,7 @@
                                     <c:forEach items="${salesFileList}" var="file">
                                         <tr>
                                             <td><i class="fa fa-folder" style="color:#00acd6"></i></td>
-                                            <td><a href="/doc?fid=${file.id}">&nbsp;${file.name}</a></td>
+                                            <td><a href="/sales/${file.id}/downLoad">&nbsp;${file.name}</a></td>
                                         </tr>
                                     </c:forEach>
                                 </table>

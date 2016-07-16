@@ -89,7 +89,7 @@ public class SalesService {
     }
 
     public List<SalesFile> findAllFileBySalesid(Integer id) {
-        return salesFileMapper.findAllByid(id);
+        return salesFileMapper.findAllBySalesid(id);
     }
 
     public void saveFile(InputStream inputStream, String originalFilename, long size, String contentType, Integer salesid) {
@@ -111,5 +111,9 @@ public class SalesService {
         salesFile.setSalesid(salesid);
 
         salesFileMapper.save(salesFile);
+    }
+
+    public SalesFile findSalesFileByid(Integer id) {
+        return salesFileMapper.findAllByid(id);
     }
 }

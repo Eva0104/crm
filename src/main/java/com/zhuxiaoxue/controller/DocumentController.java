@@ -69,6 +69,12 @@ public class DocumentController {
         return "success";
     }
 
+    /**
+     * 下载文件
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/download/{id:\\d+}",method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer id) throws IOException {
         Document document = documentService.findAllById(id);
