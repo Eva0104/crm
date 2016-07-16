@@ -64,6 +64,10 @@ public class SalesService {
         return salesMapper.countByparams(params);
     }
 
+    /**
+     * 新增机会 并保存salseLog数据
+     * @param sales
+     */
     @Transactional
     public void addSales(Sales sales) {
 
@@ -115,5 +119,22 @@ public class SalesService {
 
     public SalesFile findSalesFileByid(Integer id) {
         return salesFileMapper.findAllByid(id);
+    }
+
+    @Transactional
+    public void delSales(Integer salesid) {
+        Sales sales = salesMapper.findByid(salesid);
+        if(sales != null){
+            List<SalesFile> salesFileList = salesFileMapper.findAllBySalesid(salesid);
+            if(!salesFileList.isEmpty()){
+                salesFileMapper.delFile(salesFileList);
+            }
+
+            List<SalesLog> salesLogList = salesLogMapper.findBySalesid(salesid);
+            if(!salesLogList.isEmpty()){
+                salesLogMapper.delLog(salesLogList);
+            }
+        }
+        salesMapper.delByid(salesid);
     }
 }

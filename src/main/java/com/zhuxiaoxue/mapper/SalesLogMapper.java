@@ -13,4 +13,6 @@ public interface SalesLogMapper {
     void saveSalesLog(SalesLog salesLog);
 
     List<SalesLog> findBySalesid(Integer id);
+
+    void delLog(List<SalesLog> salesLogList);
 }

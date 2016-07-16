@@ -5,6 +5,13 @@
         INSERT INTO t_salesfile (name,contenttype, `size`, salesid)
         VALUES (#{name},#{contenttype},#{size},#{salesid})
     </insert>
+    <delete id="delFile">
+        DELETE FROM t_salesfile WHERE id in (
+        <foreach collection="list" separator="," item="file">
+             #{file.id}
+        </foreach>
+        )
+    </delete>
 
     <select id="findAllBySalesid" resultType="SalesFile">
         SELECT * FROM t_salesfile WHERE salesid = #{id}

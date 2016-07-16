@@ -10,6 +10,7 @@ import com.zhuxiaoxue.pojo.SalesLog;
 import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.service.SalesLogService;
 import com.zhuxiaoxue.service.SalesService;
+import com.zhuxiaoxue.util.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -185,6 +187,13 @@ public class SalesController {
                 .header("Content-Disposition","attachment;filename=\""+fileName+"\"")
                 .body(new InputStreamResource(fileInputStream));
 
+    }
+
+
+    @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
+    public String delSales(@PathVariable Integer id){
+        salesService.delSales(id);
+        return "redirect:/sales";
     }
 
 }

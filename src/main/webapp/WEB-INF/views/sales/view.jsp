@@ -50,7 +50,7 @@
                     </h3>
                     <div class="box-tools">
                         <shiro:hasRole name="经理">
-                            <button class="btn btn-danger btn-xs" id="openCust">删除进度</button>
+                            <button class="btn btn-danger btn-xs" id="delSalesBtn">删除进度</button>
                         </shiro:hasRole>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title"><i class="fa fa-list"></i> 跟进记录</h3>
                             <div class="box-tools">
-                                <button class="btn btn-success btn-xs" id="addNewLog"><i class="fa fa-plus"></i>新增记录</button>
+                                <button class="btn btn-success btn-xs" id="addNewLog"><i class="fa fa-plus"></i> 新增记录</button>
                             </div>
                         </div>
                         <div class="box-body">
@@ -97,7 +97,7 @@
                                         <li>>
                                             <i class="fa fa-weixin bg-green"></i>
                                             <div class="timeline-item">
-                                                <span class="time" id="time"><i class="fa fa-clock-o"></i>${salesLog.createtime}</span>
+                                                <span class="time"><i class="fa fa-clock-o"></i>${salesLog.createtime}</span>
                                                 <h3 class="timeline-header"><a href="#">${salesLog.context}</a> ...</h3>
                                             </div>
                                         </li>
@@ -266,6 +266,15 @@
         uploader.on('uploadComplete',function(file){
             $("#uploadBtn .text").html('<i class="fa fa-upload"></i> 上传文件');
         });
+
+        //删除进度
+        $("#delSalesBtn").click(function(){
+            if(confirm("确定删除进度表吗？")){
+                var id = ${sales.id};
+                window.location.href="/sales/del/"+id;
+            }
+        });
+
     })
 </script>
 

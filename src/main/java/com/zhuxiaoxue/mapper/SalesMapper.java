@@ -23,4 +23,6 @@ public interface SalesMapper {
     Sales findByname(String name);
 
     void update(Sales sales);
+
+    void delByid(Integer id);
 }

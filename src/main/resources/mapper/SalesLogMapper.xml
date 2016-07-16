@@ -9,8 +9,16 @@
          VALUES (#{context},#{type},#{salesid})
     </insert>
 
+    <delete id="delLog">
+        DELETE FROM t_sales_log where id in (
+        <foreach collection="list" separator="," item="log">
+            #{log.id}
+        </foreach>
+        )
+    </delete>
+
     <select id="findBySalesid" resultType="SalesLog">
-        SELECT * FROM t_sales_log WHERE salesid = #{id}
+        SELECT * FROM t_sales_log WHERE salesid = #{id} order by id desc
     </select>
 
 </mapper>
