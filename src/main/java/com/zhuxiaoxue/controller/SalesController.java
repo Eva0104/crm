@@ -2,6 +2,7 @@ package com.zhuxiaoxue.controller;
 
 import com.google.common.collect.Maps;
 import com.zhuxiaoxue.dto.DataTableReasult;
+import com.zhuxiaoxue.exception.ForbiddenException;
 import com.zhuxiaoxue.exception.NotFoundException;
 import com.zhuxiaoxue.pojo.Customer;
 import com.zhuxiaoxue.pojo.Sales;
@@ -11,6 +12,7 @@ import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.service.SalesLogService;
 import com.zhuxiaoxue.service.SalesService;
 import com.zhuxiaoxue.util.DateUtil;
+import com.zhuxiaoxue.util.ShiroUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -102,6 +104,15 @@ public class SalesController {
     public String showOne(@PathVariable Integer id,Model model){
         //机会信息
         Sales sales = salesService.findByid(id);
+
+        if(sales == null){
+            throw new NotFoundException();
+        }
+
+        if( sales.getUserid()!= null && !sales.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+            throw new ForbiddenException();
+        }
+
         model.addAttribute("sales",sales);
 
         //机会跟进信息
@@ -190,6 +201,11 @@ public class SalesController {
     }
 
 
+    /**
+     * 删除进度表
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
     public String delSales(@PathVariable Integer id){
         salesService.delSales(id);

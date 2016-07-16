@@ -11,8 +11,8 @@
 
     <delete id="delLog">
         DELETE FROM t_sales_log where id in (
-        <foreach collection="list" separator="," item="log">
-            #{log.id}
+        <foreach collection="list" separator="," item="sales">
+            #{sales.id}
         </foreach>
         )
     </delete>

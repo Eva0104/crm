@@ -86,9 +86,9 @@
                                 <c:forEach items="${salesLogList}" var="salesLog">
                                   <c:if test="${salesLog.type == '手动'}">
                                       <li>>
-                                          <i class="fa fa-envelope bg-blue"></i>
+                                          <i class="fa fa-history bg-blue"></i>
                                           <div class="timeline-item">
-                                              <span class="time"><i class="fa fa-weixin"></i>${salesLog.createtime}</span>
+                                              <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>
                                               <h3 class="timeline-header"><a href="#">${salesLog.context}</a> ...</h3>
                                           </div>
                                       </li>
@@ -97,7 +97,7 @@
                                         <li>>
                                             <i class="fa fa-weixin bg-green"></i>
                                             <div class="timeline-item">
-                                                <span class="time"><i class="fa fa-clock-o"></i>${salesLog.createtime}</span>
+                                                <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>
                                                 <h3 class="timeline-header"><a href="#">${salesLog.context}</a> ...</h3>
                                             </div>
                                         </li>
@@ -213,10 +213,14 @@
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/plugins/moment/moment.js"></script>
 <script src="/static/plugins/webuploader/webuploader.min.js"></script>
+<script src="/static/plugins/timeago/timeago.js"></script>
+<script src="/static/plugins/timeago/timeago_zh_cn.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 <script>
     $(function(){
+
+        $(".timeago").timeago();
 
         //新增跟进记录
         $("#addNewLog").click(function(){

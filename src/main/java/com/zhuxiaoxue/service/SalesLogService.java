@@ -57,4 +57,5 @@ public class SalesLogService {
         sales.setLasttime(df.format(new Date()));
         salesMapper.update(sales);
     }
+
 }

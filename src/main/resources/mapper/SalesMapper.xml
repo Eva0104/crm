@@ -51,4 +51,7 @@
     <select id="findByname" resultType="Sales">
         SELECT * FROM t_sales WHERE name = #{name}
     </select>
+    <select id="findSalesByCustid" resultType="com.zhuxiaoxue.pojo.Sales">
+        select * from t_sales WHERE custid = #{id};
+    </select>
 </mapper>

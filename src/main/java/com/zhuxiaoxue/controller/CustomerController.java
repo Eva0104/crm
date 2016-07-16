@@ -12,8 +12,12 @@ import com.zhuxiaoxue.dto.JsonResult;
 import com.zhuxiaoxue.exception.ForbiddenException;
 import com.zhuxiaoxue.exception.NotFoundException;
 import com.zhuxiaoxue.pojo.Customer;
+import com.zhuxiaoxue.pojo.Sales;
+import com.zhuxiaoxue.pojo.SalesLog;
 import com.zhuxiaoxue.pojo.User;
 import com.zhuxiaoxue.service.CustomerService;
+import com.zhuxiaoxue.service.SalesLogService;
+import com.zhuxiaoxue.service.SalesService;
 import com.zhuxiaoxue.service.UserService;
 import com.zhuxiaoxue.util.ShiroUtil;
 import org.springframework.stereotype.Controller;
@@ -39,44 +43,51 @@ public class CustomerController {
     private CustomerService customerService;
 
     @Inject
+    private SalesLogService salesLogService;
+
+    @Inject
+    private SalesService salesService;
+
+    @Inject
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Model model){
+    public String list(Model model) {
         List<Customer> companyList = customerService.findAllCompany();
         System.out.println(companyList);
-        model.addAttribute("companyList",companyList);
+        model.addAttribute("companyList", companyList);
         return "/customer/list";
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public DataTableReasult<Customer> showAll(HttpServletRequest request){
+    public DataTableReasult<Customer> showAll(HttpServletRequest request) {
         String draw = request.getParameter("draw");
         String start = request.getParameter("start");
         String length = request.getParameter("length");
         String keyword = request.getParameter("search[value]");
 
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("start",start);
-        params.put("length",length);
-        params.put("keyword",keyword);
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("start", start);
+        params.put("length", length);
+        params.put("keyword", keyword);
 
         List<Customer> customerList = customerService.findAllByParams(params);
         Long count = customerService.count();
         Long filterCount = customerService.countByParams(params);
 
-        return new DataTableReasult<>(draw,customerList,count,filterCount);
+        return new DataTableReasult<>(draw, customerList, count, filterCount);
     }
 
     /**
      * 保存新客户
+     *
      * @param customer
      * @return
      */
-    @RequestMapping(value = "/new",method = RequestMethod.POST)
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
-    public String addCustomer(Customer customer){
+    public String addCustomer(Customer customer) {
         customerService.addCustomer(customer);
         return "success";
     }
@@ -84,25 +95,26 @@ public class CustomerController {
 
     /**
      * 删除客户
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/del/{id:\\d+}",method = RequestMethod.GET)
+    @RequestMapping(value = "/del/{id:\\d+}", method = RequestMethod.GET)
     @ResponseBody
-    public String delCustomer(@PathVariable Integer id){
+    public String delCustomer(@PathVariable Integer id) {
         customerService.delCustomerById(id);
         return "success";
     }
 
 
-    @RequestMapping(value = "/edit/{id:\\d+}.json",method = RequestMethod.GET)
+    @RequestMapping(value = "/edit/{id:\\d+}.json", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResult showCustomer(@PathVariable Integer id){
+    public JsonResult showCustomer(@PathVariable Integer id) {
         Customer customer = customerService.findById(id);
-        if(customer == null){
+        if (customer == null) {
             throw new NotFoundException();
         }
-        if(customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()) {
             throw new NotFoundException();
         }
         return new JsonResult(customer);
@@ -110,59 +122,68 @@ public class CustomerController {
 
     /**
      * 修改客户信息
+     *
      * @param customer
      * @return
      */
-    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public String updateCustomer(Customer customer){
+    public String updateCustomer(Customer customer) {
         customerService.update(customer);
         return "success";
     }
 
     /**
      * 显示客户个人主页
+     *
      * @param model
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
-    public String showCustomer(Model model,@PathVariable Integer id){
+    @RequestMapping(value = "/{id:\\d+}", method = RequestMethod.GET)
+    public String showCustomer(Model model, @PathVariable Integer id) {
         Customer customer = customerService.findById(id);
 
-        if(customer == null){
+        if (customer == null) {
             throw new NotFoundException();
         }
-        if(customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()) {
             throw new ForbiddenException();
         }
 
-        if(customer.getType().equals("company")){
+        if (customer.getType().equals("company")) {
             List<Customer> customerList = customerService.findByCompanyId(customer.getId());
-            model.addAttribute("customerList",customerList);
+            model.addAttribute("customerList", customerList);
         }
 
         //转移客户时显示所有用户
         List<User> userList = userService.findAll();
-        model.addAttribute("userList",userList);
+        model.addAttribute("userList", userList);
 
-        model.addAttribute("customer",customer);
+        //显示机会列表
+        List<Sales> salesList = salesService.findSalesByCustid(id);
+        model.addAttribute("message", "暂无机会");
+
+        model.addAttribute("salesList", salesList);
+
+        model.addAttribute("customer", customer);
 
         return "/customer/view";
     }
 
     /**
      * 公开客户
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/open/{id:\\d+}",method = RequestMethod.GET)
-    public String openCustomer(@PathVariable Integer id){
+    @RequestMapping(value = "/open/{id:\\d+}", method = RequestMethod.GET)
+    public String openCustomer(@PathVariable Integer id) {
         Customer customer = customerService.findById(id);
-        if(customer == null){
+        if (customer == null) {
             throw new NotFoundException();
         }
-        if(customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()) {
             throw new ForbiddenException();
         }
         customerService.openCustomer(customer);
@@ -171,44 +192,43 @@ public class CustomerController {
 
     /**
      * 转移客户
+     *
      * @param id
      * @param userid
      * @return
      */
-    @RequestMapping(value = "/moveCustomer",method = RequestMethod.POST)
-    public String moveCustomer(Integer id,Integer userid){
+    @RequestMapping(value = "/moveCustomer", method = RequestMethod.POST)
+    public String moveCustomer(Integer id, Integer userid) {
 
         Customer customer = customerService.findById(id);
-        if(customer == null){
+        if (customer == null) {
             throw new NotFoundException();
         }
-        if(customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()){
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserId()) && !ShiroUtil.isEmployer()) {
             throw new ForbiddenException();
         }
-        customerService.moveCustomer(customer,userid);
+        customerService.moveCustomer(customer, userid);
         return "redirect:/customer";
     }
 
 
-    @RequestMapping(value = "/qrcode/{id:\\d+}",method = RequestMethod.GET)
+    @RequestMapping(value = "/qrcode/{id:\\d+}", method = RequestMethod.GET)
     public void makeQrcode(@PathVariable Integer id, HttpServletResponse response) throws WriterException, IOException {
         String meCard = customerService.makeMeCard(id);
 
-        Map<EncodeHintType,String> hints = Maps.newConcurrentMap();
+        Map<EncodeHintType, String> hints = Maps.newConcurrentMap();
 
-        hints.put(EncodeHintType.CHARACTER_SET,"UTF-8");
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(meCard, BarcodeFormat.QR_CODE,200,200,hints);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(meCard, BarcodeFormat.QR_CODE, 200, 200, hints);
 
         OutputStream outputStream = response.getOutputStream();
 
-        MatrixToImageWriter.writeToStream(bitMatrix,"png",outputStream);
+        MatrixToImageWriter.writeToStream(bitMatrix, "png", outputStream);
 
         outputStream.flush();
         outputStream.close();
     }
-
-
 
 
 }

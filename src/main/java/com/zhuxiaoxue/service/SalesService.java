@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -79,6 +81,9 @@ public class SalesService {
         sales.setUserid(ShiroUtil.getCurrentUserId());
         sales.setUsername(ShiroUtil.getCurrentUserRealname());
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sales.setLasttime(df.format(new Date()));
+
         salesMapper.save(sales);
         SalesLog salesLog = new SalesLog(sales.getId(),sales.getProgress(),SalesLog.TYPE_AUTO);
         salesLogMapper.saveSalesLog(salesLog);
@@ -96,6 +101,15 @@ public class SalesService {
         return salesFileMapper.findAllBySalesid(id);
     }
 
+
+    /**
+     * 保存上传的相关文件
+     * @param inputStream
+     * @param originalFilename
+     * @param size
+     * @param contentType
+     * @param salesid
+     */
     public void saveFile(InputStream inputStream, String originalFilename, long size, String contentType, Integer salesid) {
         SalesFile salesFile = new SalesFile();
         try {
@@ -121,6 +135,10 @@ public class SalesService {
         return salesFileMapper.findAllByid(id);
     }
 
+    /**
+     * 删除进度表
+     * @param salesid
+     */
     @Transactional
     public void delSales(Integer salesid) {
         Sales sales = salesMapper.findByid(salesid);
@@ -136,5 +154,9 @@ public class SalesService {
             }
         }
         salesMapper.delByid(salesid);
+    }
+
+    public List<Sales> findSalesByCustid(Integer id) {
+        return salesMapper.findSalesByCustid(id);
     }
 }

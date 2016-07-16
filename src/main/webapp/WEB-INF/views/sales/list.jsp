@@ -51,8 +51,8 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <form class="form-inline">
-                        <input type="text" class="form-control" placeholder="机会名称">
+                    <form class="form-inline" action="/sales/search">
+                        <input type="text" class="form-control" placeholder="机会名称" name="name">
                         <select class="form-control" name="progress">
                             <option value="">当前进度</option>
                             <option value="初次接触">初次接触</option>
@@ -62,7 +62,7 @@
                             <option value="交易搁置">交易搁置</option>
                         </select>
                         <input type="text" id="rangepicker" class="form-control" placeholder="跟进时间">
-                        <button class="btn btn-success"><i class="fa fa-search"></i>搜索</button>
+                        <button class="btn btn-success" id="searchBtn"><i class="fa fa-search"></i>搜索</button>
                     </form>
                 </div>
             </div>
@@ -225,8 +225,20 @@
                 {"data":function(row){
                     return "￥" + row.price
                 }},
-                {"data":"progress"},
-                {"data":"lasttime"},
+                {"data":function(row){
+                    if(row.progress == '交易搁置'){
+                        return "<button class='btn btn-danger'>"+row.progress+"</button>"
+                    }
+                    return "<button class='btn btn-success'>"+row.progress+"</button>"
+                }},
+                {"data":function(row){
+                    var timestemp = row.lasttime;
+                    if(!timestemp){
+                        return "无";
+                    }
+                    var date = moment(timestemp);
+                    return date.format("YYYY-MM-DD HH:mm");
+                }},
                 {"data":"username"}
             ],
             "language": {
@@ -295,6 +307,13 @@
 
         $("#saveBtn").click(function(){
             $("#addForm").submit();
+        });
+
+        //条件搜索
+
+        $("#searchBtn").click(function(){
+
+
         });
 
 

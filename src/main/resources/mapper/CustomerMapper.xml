@@ -64,7 +64,7 @@
     </select>
 
     <select id="findCustomerByUserId" resultType="Customer">
-        SELECT * FROM t_customer WHERE userid = #{userid}
+        SELECT * FROM t_customer WHERE userid = #{userid} or userid = '' or userid is null
     </select>
 
     <select id="findAllCustomer" resultType="com.zhuxiaoxue.pojo.Customer">

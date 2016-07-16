@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -22,7 +24,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <%@include file="../include/mainHeader.jsp"%>
+    <%@include file="../include/mainHeader.jsp" %>
     <jsp:include page="../include/leftSide.jsp">
         <jsp:param name="menu" value="customer"/>
     </jsp:include>
@@ -76,19 +78,19 @@
                             <td>地址</td>
                             <td colspan="3">${customer.address}</td>
                             <c:if test="${customer.type == 'person'}">
-                                <tr>
-                                    <td>所属公司</td>
-                                    <td colspan="5"><a href='/customer/${customer.companyid}'>${customer.companyname}</a></td>
-                                </tr>
-                            </c:if>
-                            <c:if test="${customer.type =='company'}">
-                                <tr>
-                                    <td>公司关联人</td>
-                                    <c:forEach items="${customerList}" var="person">
-                                        <td colspan="3"><a href="/customer/${person.id}">${person.name}</a></td>
-                                    </c:forEach>
-                                </tr>
-                            </c:if>
+                        <tr>
+                            <td>所属公司</td>
+                            <td colspan="5"><a href='/customer/${customer.companyid}'>${customer.companyname}</a></td>
+                        </tr>
+                        </c:if>
+                        <c:if test="${customer.type =='company'}">
+                            <tr>
+                                <td>公司关联人</td>
+                                <c:forEach items="${customerList}" var="person">
+                                    <td colspan="3"><a href="/customer/${person.id}">${person.name}</a></td>
+                                </c:forEach>
+                            </tr>
+                        </c:if>
                         </tr>
                     </table>
                 </div>
@@ -98,10 +100,36 @@
                 <div class="col-md-8">
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-list"></i> 項目列表</h3>
+                            <h3 class="box-title"><i class="fa fa-list"></i> 进度列表</h3>
                         </div>
                         <div class="box-body">
-                            <h5>暂无项目</h5>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <td>时间</td>
+                                    <td>机会</td>
+                                    <td>进度</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${salesList}" var="sales">
+                                        <tr>
+                                            <td><fmt:formatDate value="${sales.createtime}" pattern="y-M-d HH:mm"></fmt:formatDate></td>
+                                            <td><a href="/sales/${sales.id}">${sales.name}</a></td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${sales.progress == '完成交易'}">
+                                                        <span class="btn btn-success btn-xs">${sales.progress}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="btn btn-primary btn-xs">${sales.progress}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -111,7 +139,8 @@
                         <div class="box-header with-border">
                             <h3 class="box-title"><i class="fa fa-qrcode"></i> 电子名片</h3>
                             <div class="box-tools">
-                                <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i
+                                        class="fa fa-plus"></i></button>
                             </div>
                         </div>
                         <div class="box-body" style="text-align: center">
@@ -142,7 +171,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">转移客户</h4>
             </div>
             <div class="modal-body">
@@ -175,27 +205,27 @@
 <!-- AdminLTE App -->
 <script src="/static/dist/js/app.min.js"></script>
 <script>
-    $(function(){
+    $(function () {
 
         //公开客户
-        $("#openCust").click(function(){
-            if(confirm("确认要公开吗？")){
+        $("#openCust").click(function () {
+            if (confirm("确认要公开吗？")) {
                 var id = ${customer.id};
-                window.location.href = "/customer/open/"+id;
+                window.location.href = "/customer/open/" + id;
             }
         });
 
         //转移客户
-        $("#moveCust").click(function(){
-            if(confirm("确认转移客户吗？")){
+        $("#moveCust").click(function () {
+            if (confirm("确认转移客户吗？")) {
                 $("#moveModal").modal({
-                    show:true,
-                    backdrop:'static'
+                    show: true,
+                    backdrop: 'static'
                 });
             }
         });
 
-        $("#moveBtn").click(function(){
+        $("#moveBtn").click(function () {
             $("#moveForm").submit();
         });
 

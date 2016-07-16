@@ -1,5 +1,6 @@
 package com.zhuxiaoxue.mapper;
 
+import com.zhuxiaoxue.pojo.Sales;
 import com.zhuxiaoxue.pojo.SalesLog;
 import org.apache.ibatis.annotations.Param;
 
