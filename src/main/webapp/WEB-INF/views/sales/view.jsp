@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -123,8 +123,7 @@
                                     <c:forEach items="${salesFileList}" var="file">
                                         <tr>
                                             <td><i class="fa fa-folder" style="color:#00acd6"></i></td>
-                                            <td><a href="/doc?fid=${file.id}">${file.name}</a></td>
-                                            <td><fmt:formatDate value="${file.createtime}" pattern="y-M-d HH:mm"></fmt:formatDate></td>
+                                            <td><a href="/doc?fid=${file.id}">&nbsp;${file.name}</a></td>
                                         </tr>
                                     </c:forEach>
                                 </table>
@@ -247,7 +246,7 @@
         var uploader = WebUploader.create({
             swf: "/static/plugins/webuploader/Uploader.swf",
             pick:"#uploadBtn",
-            server:"/sales/file/upload",
+            server:"/sales/${sales.id}/fileUpload",
             fileValL:"file",
             auto: true
         });

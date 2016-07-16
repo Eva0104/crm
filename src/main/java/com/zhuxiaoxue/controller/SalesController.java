@@ -134,7 +134,7 @@ public class SalesController {
 
     @RequestMapping(value = "/{id:\\d+}/fileUpload",method = RequestMethod.POST)
     @ResponseBody
-    public String saveFile(MultipartFile file, Integer id) throws IOException {
+    public String saveFile(MultipartFile file, @PathVariable Integer id) throws IOException {
         if (!file.isEmpty()) {
             salesService.saveFile(file.getInputStream(),file.getOriginalFilename(),file.getSize(),file.getContentType(),id);
         } else {
