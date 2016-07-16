@@ -4,11 +4,25 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class SalesLog implements Serializable {
+
+    public static final String TYPE_AUTO = "自动";
+    public static final String TYPE_MANUAL = "手动";
+
+
     private Integer id;
     private Integer salesid;
     private String context;
     private Timestamp createtime;
     private String type;
+
+    public SalesLog() {
+    }
+
+    public SalesLog(Integer salesid, String context, String type) {
+        this.salesid = salesid;
+        this.context = context;
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

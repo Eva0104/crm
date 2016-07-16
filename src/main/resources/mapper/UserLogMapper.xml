@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhuxiaoxue.mapper.UserLogMapper">
 
+    <cache/>
+
     <insert id="save">
         INSERT INTO t_userlog (logintime, loginip, userid) VALUES (#{logintime},#{loginip},#{userid})
     </insert>

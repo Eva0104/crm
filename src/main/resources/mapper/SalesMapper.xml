@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhuxiaoxue.mapper.SalesMapper">
-    <insert id="save">
+
+    <cache/>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_sales (name, price, progress,lasttime, successtime, userid, custid, username, custname)
         VALUES (#{name},#{price},#{progress},#{lasttime},#{successtime},#{userid},#{custid},#{username},#{custname})
     </insert>
+
+    <update id="update">
+        UPDATE t_sales SET progress=#{progress},lasttime=#{lasttime},successtime=#{successtime} where id=#{id}
+    </update>
 
     <select id="findAllByParams" resultType="Sales">
         SELECT * FROM t_sales
@@ -36,5 +43,9 @@
     </select>
     <select id="findByid" resultType="Sales">
         select * from t_sales WHERE id=#{id};
+    </select>
+
+    <select id="findByname" resultType="Sales">
+        SELECT * FROM t_sales WHERE name = #{name}
     </select>
 </mapper>

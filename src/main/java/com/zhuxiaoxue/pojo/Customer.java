@@ -1,8 +1,9 @@
 package com.zhuxiaoxue.pojo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Customer {
+public class Customer implements Serializable{
 
     public static final String CUSTOMER_COMPANY = "company";
     public static final String CUSTOMER_PROPLE = "person";
