@@ -13,6 +13,7 @@ import com.zhuxiaoxue.service.SalesLogService;
 import com.zhuxiaoxue.service.SalesService;
 import com.zhuxiaoxue.util.DateUtil;
 import com.zhuxiaoxue.util.ShiroUtil;
+import com.zhuxiaoxue.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -67,12 +68,22 @@ public class SalesController {
         String draw = request.getParameter("draw");
         String start = request.getParameter("start");
         String length = request.getParameter("length");
-        String keyword = request.getParameter("search[value]");
+
+        String name = request.getParameter("name");
+        name= Strings.toUTF8(name);
+        String progress = request.getParameter("progress");
+        progress=Strings.toUTF8(progress);
+        String startdate=request.getParameter("startdate");
+        String enddate = request.getParameter("enddate");
 
         Map<String,Object> params = Maps.newHashMap();
         params.put("start",start);
         params.put("length",length);
-        params.put("keyword",keyword);
+
+        params.put("name",name);
+        params.put("progress",progress);
+        params.put("startdate",startdate);
+        params.put("enddate",enddate);
 
         List<Sales> salesList = salesService.findAllByparams(params);
         Long count = salesService.count();

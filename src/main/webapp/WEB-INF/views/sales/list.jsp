@@ -23,7 +23,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <%@include file="../include/mainHeader.jsp"%>
+    <%@include file="../include/mainHeader.jsp" %>
     <jsp:include page="../include/leftSide.jsp">
         <jsp:param name="menu" value="sales"/>
     </jsp:include>
@@ -47,13 +47,16 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-search"></i> 搜索</h3>
                     <div class="box-tools">
-                        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i class="fa fa-plus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"><i
+                                class="fa fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <form class="form-inline" action="/sales/search">
-                        <input type="text" class="form-control" placeholder="机会名称" name="name">
-                        <select class="form-control" name="progress">
+                    <form class="form-inline">
+                        <input type="hidden" id="search_start_time">
+                        <input type="hidden" id="search_end_time">
+                        <input type="text" class="form-control" placeholder="机会名称" id="search_name">
+                        <select class="form-control" id="search_progress">
                             <option value="">当前进度</option>
                             <option value="初次接触">初次接触</option>
                             <option value="确认意向">确认意向</option>
@@ -62,7 +65,7 @@
                             <option value="交易搁置">交易搁置</option>
                         </select>
                         <input type="text" id="rangepicker" class="form-control" placeholder="跟进时间">
-                        <button class="btn btn-success" id="searchBtn"><i class="fa fa-search"></i>搜索</button>
+                        <button class="btn btn-success" id="searchBtn" type="button"><i class="fa fa-search"></i>搜索</button>
                     </form>
                 </div>
             </div>
@@ -76,14 +79,14 @@
                 <div class="box-body">
                     <table class="table" id="salesTable">
                         <thead>
-                            <tr>
-                                <th>名称</th>
-                                <th>关联客户</th>
-                                <th>金额</th>
-                                <th>当前进度</th>
-                                <th>最后跟进时间</th>
-                                <th>所属人</th>
-                            </tr>
+                        <tr>
+                            <th>名称</th>
+                            <th>关联客户</th>
+                            <th>金额</th>
+                            <th>当前进度</th>
+                            <th>最后跟进时间</th>
+                            <th>所属人</th>
+                        </tr>
                         </thead>
                         <tbody>
 
@@ -102,7 +105,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">新增机会</h4>
             </div>
             <div class="modal-body">
@@ -160,86 +164,55 @@
 <script src="/static/dist/js/app.min.js"></script>
 
 <script>
-    $(function(){
-
-        $("#rangepicker").daterangepicker({
-            format:"YYYY-MM-DD",
-            separator:"~",
-            locale:{
-                "applyLabel":"选择",
-                "cancelLabel":"取消",
-                "fromLabel":"从",
-                "toLabel":"到",
-                "customRangeLabel":"自定义",
-                "weekLabel":"周",
-                "daysOfWeek":[
-                        "一",
-                        "二",
-                        "三",
-                        "四",
-                        "五",
-                        "六",
-                        "日"
-                ],
-                "monthNames":[
-                        "一月",
-                        "二月",
-                        "三月",
-                        "四月",
-                        "五月",
-                        "六月",
-                        "七月",
-                        "八月",
-                        "九月",
-                        "十月",
-                        "十一月",
-                        "十二月"
-                ],
-                "firstDay": 1,
-            },
-            ranges:{
-                '今天':[moment(),moment()],
-                '昨天':[moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '最近七天':[moment().subtract(6,'days'),moment()],
-                '最近30天':[moment().subtract(29,'days'),moment()],
-                '本月':[moment().startOf('month'),moment().endOf('month')],
-                '上个月':[moment().subtract(1,'month').startOf('month'),moment().subtract(1,'month').endOf('month')]
-            }
-        });
-
-        $("#rangepicker").on('apply.daterangepicker',function(ev,picker){
-
-        });
+    $(function () {
 
         var dataTable = $("#salesTable").DataTable({
-            serverSide:true,
-            ajax:"/sales/list",
-            ordering:false,
+            serverSide: true,
+            ajax: {
+                url: "/sales/list",
+                data: function(dataSouce){
+                    dataSouce.name=$("#search_name").val();
+                    dataSouce.progress=$("#search_progress").val();
+                    dataSouce.startdate=$("#search_start_time").val();
+                    dataSouce.enddate=$("#search_end_time").val();
+                }
+            },
+            ordering: false,
             "autoWidth": false,
-            searching:false,
-            columns:[
-                {"data":function(row){
-                    return "<a href='/sales/"+row.id+"'>"+row.name+"</a>"
-                }},
-                {"data":"custname"},
-                {"data":function(row){
-                    return "￥" + row.price
-                }},
-                {"data":function(row){
-                    if(row.progress == '交易搁置'){
-                        return "<button class='btn btn-danger'>"+row.progress+"</button>"
+            searching: false,
+            columns: [
+                {
+                    "data": function (row) {
+                        return "<a href='/sales/" + row.id + "'>" + row.name + "</a>"
                     }
-                    return "<button class='btn btn-success'>"+row.progress+"</button>"
+                },
+                {"data": function(row){
+                    return "<a href='/customer/" + row.custid + "'>" + row.custname + "</a>"
                 }},
-                {"data":function(row){
-                    var timestemp = row.lasttime;
-                    if(!timestemp){
-                        return "无";
+                {
+                    "data": function (row) {
+                        return "￥" + row.price
                     }
-                    var date = moment(timestemp);
-                    return date.format("YYYY-MM-DD HH:mm");
-                }},
-                {"data":"username"}
+                },
+                {
+                    "data": function (row) {
+                        if (row.progress == '交易搁置') {
+                            return "<button class='btn btn-danger'>" + row.progress + "</button>"
+                        }
+                        return "<button class='btn btn-success'>" + row.progress + "</button>"
+                    }
+                },
+                {
+                    "data": function (row) {
+                        var timestemp = row.lasttime;
+                        if (!timestemp) {
+                            return "无";
+                        }
+                        var date = moment(timestemp);
+                        return date.format("YYYY-MM-DD HH:mm");
+                    }
+                },
+                {"data": "username"}
             ],
             "language": {
                 "search": "请输入客户名称或联系方式",
@@ -259,64 +232,111 @@
             }
         });
 
+        //条件搜索
+        $("#searchBtn").click(function () {
+            dataTable.ajax.reload();
+        });
+
+        $("#rangepicker").daterangepicker({
+            format: "YYYY-MM-DD",
+            separator: "~",
+            locale: {
+                "applyLabel": "选择",
+                "cancelLabel": "取消",
+                "fromLabel": "从",
+                "toLabel": "到",
+                "customRangeLabel": "自定义",
+                "weekLabel": "周",
+                "daysOfWeek": [
+                    "一",
+                    "二",
+                    "三",
+                    "四",
+                    "五",
+                    "六",
+                    "日"
+                ],
+                "monthNames": [
+                    "一月",
+                    "二月",
+                    "三月",
+                    "四月",
+                    "五月",
+                    "六月",
+                    "七月",
+                    "八月",
+                    "九月",
+                    "十月",
+                    "十一月",
+                    "十二月"
+                ],
+                "firstDay": 1,
+            },
+            ranges: {
+                '今天': [moment(), moment()],
+                '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                '最近七天': [moment().subtract(6, 'days'), moment()],
+                '最近30天': [moment().subtract(29, 'days'), moment()],
+                '本月': [moment().startOf('month'), moment().endOf('month')],
+                '上个月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+
+
+
+        $("#rangepicker").on('apply.daterangepicker', function (ev, picker) {
+            $("#search_start_time").val(picker.startDate.format("YYYY-MM-DD"));
+            $("#search_end_time").val(picker.endDate.format("YYYY-MM-DD"));
+
+        });
 
         //新增进度
-        $("#addSales").click(function(){
+        $("#addSales").click(function () {
             $("#addModal").modal({
-                show:true,
-                backdrop:'static'
+                show: true,
+                backdrop: 'static'
             });
         });
 
         $("#addForm").validate({
-            errorElemrnt:"span",
-            errorClass:"text-danger",
-            rules:{
-                name:{
-                    required:true
+            errorElement: "span",
+            errorClass: "text-danger",
+            rules: {
+                name: {
+                    required: true
                 },
-                price:{
-                    required:true
+                price: {
+                    required: true
                 },
-                progress:{
-                    required:true
+                progress: {
+                    required: true
                 }
             },
-            messages:{
-                name:{
-                    required:"请输入机会名称"
+            messages: {
+                name: {
+                    required: "请输入机会名称"
                 },
-                price:{
-                    required:"请输入金额"
+                price: {
+                    required: "请输入金额"
                 },
-                progress:{
-                    required:"请选择进度"
+                progress: {
+                    required: "请选择进度"
                 }
             },
-            submitHandler:function(form){
-                $.post("/sales/add",$(form).serialize()).done(function(data){
-                    if(data == "success"){
+            submitHandler: function (form) {
+                $.post("/sales/add", $(form).serialize()).done(function (data) {
+                    if (data == "success") {
                         $("#addModal").modal("hide");
-                        location.reload();
                     }
-                }).fail(function(){
+                }).fail(function () {
                     alert("请求服务器异常！");
                 })
             }
         });
 
-        $("#saveBtn").click(function(){
+        $("#saveBtn").click(function () {
             $("#addForm").submit();
         });
-
-        //条件搜索
-
-        $("#searchBtn").click(function(){
-
-
-        });
-
-
 
 
     })

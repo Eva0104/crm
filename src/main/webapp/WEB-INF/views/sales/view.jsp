@@ -85,7 +85,7 @@
                             <ul class="timeline">
                                 <c:forEach items="${salesLogList}" var="salesLog">
                                   <c:if test="${salesLog.type == '手动'}">
-                                      <li>>
+                                      <li>
                                           <i class="fa fa-history bg-blue"></i>
                                           <div class="timeline-item">
                                               <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>
@@ -94,7 +94,7 @@
                                       </li>
                                   </c:if>
                                     <c:if test="${salesLog.type == '自动'}">
-                                        <li>>
+                                        <li>
                                             <i class="fa fa-weixin bg-green"></i>
                                             <div class="timeline-item">
                                                 <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>

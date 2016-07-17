@@ -51,11 +51,16 @@ public class SalesLogService {
 
         Sales sales = salesMapper.findByid(id);
         sales.setProgress(salesLog.getContext());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         //获取当前时间，并保存为最后跟进时间
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sales.setLasttime(df.format(new Date()));
         salesMapper.update(sales);
+
+        if("完成交易".equals(salesLog.getContext())){
+            sales.setSuccesstime(df.format(new Date()));
+            salesMapper.update(sales);
+        }
     }
 
 }

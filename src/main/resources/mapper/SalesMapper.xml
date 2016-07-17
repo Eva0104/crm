@@ -22,10 +22,20 @@
             <if test="userid != null and userid != ''">
                 userid = #{userid} or userid = '' or userid is null
             </if>
-            <if test="keyword != null and keyword != ''">
-                and progress = #{keyword}
+            <if test="name != null and name != ''">
+                and name like CONCAT ('%',#{name},'%')
+            </if>
+            <if test="progress != null and progress != ''">
+                and progress = (#{progress})
+            </if>
+            <if test="startdate != null and startdate != ''">
+                and lasttime >= (#{startdate})
+            </if>
+            <if test="enddate != null and enddate != ''">
+                and lasttime &lt;= (#{enddate})
             </if>
         </where>
+        order by id desc
         limit ${start},${length}
     </select>
 
@@ -39,19 +49,27 @@
             <if test="userid != null and userid != ''">
                 userid = #{userid} or userid = '' or userid is null
             </if>
-            <if test="keyword != null and keyword != ''">
-                and progress = #{keyword}
+            <if test="name != null and name != ''">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="progress != null and progress != ''">
+                and progress = #{progress}
+            </if>
+            <if test="startdate != null and startdate != ''">
+                and lasttime >= #{startdate}
+            </if>
+            <if test="enddate != null and enddate != ''">
+                and lasttime &lt;= #{enddate}
             </if>
         </where>
     </select>
+
     <select id="findByid" resultType="Sales">
         select * from t_sales WHERE id=#{id};
     </select>
 
-    <select id="findByname" resultType="Sales">
-        SELECT * FROM t_sales WHERE name = #{name}
-    </select>
     <select id="findSalesByCustid" resultType="com.zhuxiaoxue.pojo.Sales">
         select * from t_sales WHERE custid = #{id};
     </select>
+
 </mapper>

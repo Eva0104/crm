@@ -93,10 +93,6 @@ public class SalesService {
         return salesMapper.findByid(id);
     }
 
-    public Sales findByname(String name) {
-        return salesMapper.findByname(name);
-    }
-
     public List<SalesFile> findAllFileBySalesid(Integer id) {
         return salesFileMapper.findAllBySalesid(id);
     }
