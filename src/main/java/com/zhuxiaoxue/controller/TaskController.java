@@ -4,6 +4,7 @@ import com.zhuxiaoxue.dto.JsonResult;
 import com.zhuxiaoxue.pojo.Task;
 import com.zhuxiaoxue.service.TaskService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +21,9 @@ public class TaskController {
     private TaskService taskService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(){
+    public String list(Model model){
+        List<Task> timeoutTaskList = taskService.findtimeoutTask();
+        model.addAttribute("timeoutTaskList",timeoutTaskList);
         return "/task/view";
     }
 
@@ -63,6 +66,12 @@ public class TaskController {
         return "success";
     }
 
+
+    /**
+     * 将日程标记为已完成
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/done/{id:\\d+}",method = RequestMethod.POST)
     @ResponseBody
     public JsonResult doneTask(@PathVariable Integer id){

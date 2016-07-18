@@ -18,4 +18,7 @@
     <select id="findByid" resultType="com.zhuxiaoxue.pojo.Task">
         SELECT * FROM t_task WHERE id=#{id}
     </select>
+    <select id="findTimeOutTask" resultType="com.zhuxiaoxue.pojo.Task">
+        SELECT * FROM t_task WHERE userid = #{userid} and date(end) &lt;=#{today} and done = 0
+    </select>
 </mapper>

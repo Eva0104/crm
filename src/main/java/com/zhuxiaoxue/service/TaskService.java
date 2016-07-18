@@ -4,9 +4,11 @@ import com.zhuxiaoxue.mapper.TaskMapper;
 import com.zhuxiaoxue.pojo.Task;
 import com.zhuxiaoxue.util.ShiroUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Date;
 import java.util.List;
 
 @Named
@@ -37,7 +39,12 @@ public class TaskService {
         Task task = taskMapper.findByid(id);
         task.setColor("#cccccc");
         task.setDone(true);
-        taskMapper.update(id);
+        taskMapper.update(task);
         return task;
+    }
+
+    public List<Task> findtimeoutTask() {
+        String today = DateTime.now().toString("yyyy-MM-dd");
+        return taskMapper.findTimeOutTask(ShiroUtil.getCurrentUserId(),today);
     }
 }

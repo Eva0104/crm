@@ -15,7 +15,9 @@ public interface TaskMapper {
 
     void delByid(Integer id);
 
-    void update(Integer id);
+    void update(Task task);
 
     Task findByid(Integer id);
+
+    List<Task> findTimeOutTask(@Param("userid") Integer currentUserId, @Param("today") String today);
 }

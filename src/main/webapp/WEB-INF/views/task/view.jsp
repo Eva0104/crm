@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -61,7 +62,17 @@
                             <h3 class="box-title">已延期事項</h3>
                         </div>
                         <div class="box-body">
-
+                            <ul class="todo-list">
+                                <c:forEach items="${timeoutTaskList}" var="list">
+                                    <li>
+                                        <input type="checkbox"/>
+                                        <span class="text">${list.title}</span>
+                                        <div class="tools">
+                                            <i class="fa fa-trash"></i>
+                                        </div>
+                                    </li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -271,7 +282,7 @@
             }
             $.post("/task/new", $("#addForm").serialize()).done(function (result) {
                 if (result.state == "success") {
-                    $calendar.fullCalendar("rederEvent", result.data);
+                    $calendar.fullCalendar("renderEvent", result.data);
                     $("#addModal").modal('hide');
                 }
             }).fail(function () {
