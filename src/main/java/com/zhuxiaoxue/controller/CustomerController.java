@@ -11,14 +11,8 @@ import com.zhuxiaoxue.dto.DataTableReasult;
 import com.zhuxiaoxue.dto.JsonResult;
 import com.zhuxiaoxue.exception.ForbiddenException;
 import com.zhuxiaoxue.exception.NotFoundException;
-import com.zhuxiaoxue.pojo.Customer;
-import com.zhuxiaoxue.pojo.Sales;
-import com.zhuxiaoxue.pojo.SalesLog;
-import com.zhuxiaoxue.pojo.User;
-import com.zhuxiaoxue.service.CustomerService;
-import com.zhuxiaoxue.service.SalesLogService;
-import com.zhuxiaoxue.service.SalesService;
-import com.zhuxiaoxue.service.UserService;
+import com.zhuxiaoxue.pojo.*;
+import com.zhuxiaoxue.service.*;
 import com.zhuxiaoxue.util.ShiroUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +36,11 @@ public class CustomerController {
     @Inject
     private CustomerService customerService;
 
+//    @Inject
+//    private SalesLogService salesLogService;
+
     @Inject
-    private SalesLogService salesLogService;
+    private TaskService taskService;
 
     @Inject
     private SalesService salesService;
@@ -164,6 +161,10 @@ public class CustomerController {
         List<Sales> salesList = salesService.findSalesByCustid(id);
         model.addAttribute("message", "暂无机会");
 
+        //显示待办事项
+        List<Task> taskList = taskService.findTaskByCustid(id);
+        model.addAttribute("taskList",taskList);
+
         model.addAttribute("salesList", salesList);
 
         model.addAttribute("customer", customer);
@@ -228,6 +229,21 @@ public class CustomerController {
 
         outputStream.flush();
         outputStream.close();
+    }
+
+
+    /**
+     * 新增待办事项
+     * @param task
+     * @param hour
+     * @param min
+     * @return
+     */
+    @RequestMapping(value = "/task/new",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult addTask(Task task, String hour, String min){
+        taskService.save(task,hour,min);
+        return new JsonResult(task);
     }
 
 

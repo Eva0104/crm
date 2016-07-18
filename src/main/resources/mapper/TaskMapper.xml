@@ -21,4 +21,8 @@
     <select id="findTimeOutTask" resultType="com.zhuxiaoxue.pojo.Task">
         SELECT * FROM t_task WHERE userid = #{userid} and date(end) &lt;=#{today} and done = 0
     </select>
+
+    <select id="findByCustid" resultType="com.zhuxiaoxue.pojo.Task">
+        select * from t_task WHERE custid = #{custid};
+    </select>
 </mapper>

@@ -25,6 +25,8 @@ public class TaskService {
     public void save(Task task, String hour, String min) {
         if(StringUtils.isNotEmpty(hour) && StringUtils.isNotEmpty(min)){
             String remindertime = task.getStart() + "" + hour + ":" + min + "00";
+
+            //TODO 微信提醒
             task.setRemindertime(remindertime);
         }
         task.setUserid(ShiroUtil.getCurrentUserId());
@@ -46,5 +48,9 @@ public class TaskService {
     public List<Task> findtimeoutTask() {
         String today = DateTime.now().toString("yyyy-MM-dd");
         return taskMapper.findTimeOutTask(ShiroUtil.getCurrentUserId(),today);
+    }
+
+    public List<Task> findTaskByCustid(Integer id) {
+        return taskMapper.findByCustid(id);
     }
 }

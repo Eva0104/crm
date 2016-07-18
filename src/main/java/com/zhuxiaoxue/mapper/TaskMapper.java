@@ -20,4 +20,6 @@ public interface TaskMapper {
     Task findByid(Integer id);
 
     List<Task> findTimeOutTask(@Param("userid") Integer currentUserId, @Param("today") String today);
+
+    List<Task> findByCustid(Integer custid);
 }
