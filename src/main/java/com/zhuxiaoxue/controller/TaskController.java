@@ -1,7 +1,6 @@
 package com.zhuxiaoxue.controller;
 
 import com.zhuxiaoxue.dto.JsonResult;
-import com.zhuxiaoxue.mapper.TaskMapper;
 import com.zhuxiaoxue.pojo.Task;
 import com.zhuxiaoxue.service.TaskService;
 import org.springframework.stereotype.Controller;
@@ -62,6 +61,13 @@ public class TaskController {
     public String delTask(@PathVariable Integer id){
         taskService.deltaskByid(id);
         return "success";
+    }
+
+    @RequestMapping(value = "/done/{id:\\d+}",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult doneTask(@PathVariable Integer id){
+        Task task = taskService.updateByid(id);
+        return new JsonResult(task);
     }
 
 

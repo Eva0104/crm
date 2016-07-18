@@ -210,6 +210,7 @@
 <script>
     $(function () {
 
+        var _event = null;
         var $calendar = $("#calendar");
 
         $calendar.fullCalendar({
@@ -230,7 +231,7 @@
             },
             events: "/task/load",
             eventClick: function (calEvent, jsEvent, view) {
-
+                _event = calEvent;
                 $("#eventId").val(calEvent.id);
                 $("#eventTitle").text(calEvent.title);
                 $("#eventStart").text(moment(calEvent.start).format("YYYY-MM-DD"));
@@ -293,6 +294,22 @@
                 })
             }
         });
+
+        //标记为已完成
+        $("#doneBtn").click(function(){
+            var id = $("#eventId").val();
+            $.post("/task/done/"+id).done(function(result){
+                if(result.state == "success"){
+                    _event.color = "#cccccc";
+                    $calendar.fullCalendar('updateEvent',_event);
+                    $("#eventModal").modal("hide");
+                }
+
+            }).fail(function(){
+                alert("服务器异常!");
+            });
+        })
+
 
 
 

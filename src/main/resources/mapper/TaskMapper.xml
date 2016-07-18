@@ -5,11 +5,17 @@
         INSERT INTO t_task (title, start, `end`, color, userid, custid, salesid, remindertime)
         VALUES (#{title},#{start},#{end},#{color},#{userid},#{custid},#{salesid},#{remindertime})
     </insert>
+    <update id="update">
+        UPDATE t_task SET color = #{color},done=#{done} where id=#{id}
+    </update>
     <delete id="delByid">
         DELETE FROM t_task WHERE id=#{id}
     </delete>
 
     <select id="findByUserid" resultType="Task">
         SELECT * FROM t_task WHERE userid = #{userid} and date(start) >=#{start} and date(`end`) &lt;= #{end}
+    </select>
+    <select id="findByid" resultType="com.zhuxiaoxue.pojo.Task">
+        SELECT * FROM t_task WHERE id=#{id}
     </select>
 </mapper>

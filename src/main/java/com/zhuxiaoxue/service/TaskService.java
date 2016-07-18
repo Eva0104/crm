@@ -32,4 +32,12 @@ public class TaskService {
     public void deltaskByid(Integer id) {
         taskMapper.delByid(id);
     }
+
+    public Task updateByid(Integer id) {
+        Task task = taskMapper.findByid(id);
+        task.setColor("#cccccc");
+        task.setDone(true);
+        taskMapper.update(id);
+        return task;
+    }
 }
