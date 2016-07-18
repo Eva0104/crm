@@ -85,7 +85,7 @@ public class SalesService {
         sales.setLasttime(df.format(new Date()));
 
         salesMapper.save(sales);
-        SalesLog salesLog = new SalesLog(sales.getId(),sales.getProgress(),SalesLog.TYPE_AUTO);
+        SalesLog salesLog = new SalesLog(sales.getId(),ShiroUtil.getCurrentUsername()+sales.getProgress(),SalesLog.TYPE_AUTO);
         salesLogMapper.saveSalesLog(salesLog);
     }
 

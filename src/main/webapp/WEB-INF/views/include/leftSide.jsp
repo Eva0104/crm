@@ -28,7 +28,7 @@
                 <li class="${param.menu == 'sales' ? 'active':''}"><a href="/sales"><i class="fa fa-building-o"></i> <span>进度管理</span></a></li>
                 <li class="${param.menu == 'customer' ? 'active':''}"><a href="/customer"><i class="fa fa-users"></i> <span>客户管理</span></a></li>
                 <li><a href="#"><i class="fa fa-line-chart"></i> <span>统计</span></a></li>
-                <li><a href="#"><i class="fa fa-calendar-check-o"></i> <span>待办事项</span></a></li>
+                <li class="${param.menu == 'task' ? 'active':''}"><a href="/task"><i class="fa fa-calendar-check-o"></i> <span>待办事项</span></a></li>
                 <li class="${param.menu == 'doc' ? 'active':''}"><a href="/doc"><i class="fa fa-file-text"></i> <span>文档管理</span></a></li>
             </shiro:hasAnyRoles>
             <shiro:hasRole name="管理员">

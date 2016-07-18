@@ -56,10 +56,10 @@
                 and progress = #{progress}
             </if>
             <if test="startdate != null and startdate != ''">
-                and lasttime >= #{startdate}
+                and date(lasttime) >= #{startdate}
             </if>
             <if test="enddate != null and enddate != ''">
-                and lasttime &lt;= #{enddate}
+                and date(lasttime) &lt;= #{enddate}
             </if>
         </where>
     </select>

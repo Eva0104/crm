@@ -4,6 +4,7 @@ import com.zhuxiaoxue.mapper.SalesLogMapper;
 import com.zhuxiaoxue.mapper.SalesMapper;
 import com.zhuxiaoxue.pojo.Sales;
 import com.zhuxiaoxue.pojo.SalesLog;
+import com.zhuxiaoxue.util.ShiroUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -29,6 +30,11 @@ public class SalesLogService {
         return salesLogMapper.findBySalesid(id);
     }
 
+    /**
+     * 手动增加跟进记录
+     * @param salesLog
+     * @param id
+     */
     public void addLog(SalesLog salesLog,Integer id) {
         salesLog.setSalesid(id);
         salesLog.setType(SalesLog.TYPE_MANUAL);
@@ -42,9 +48,15 @@ public class SalesLogService {
         salesMapper.update(sales);
     }
 
+    /**
+     * 自动修改跟进状态
+     * @param salesLog
+     * @param id
+     */
     @Transactional
     public void editLog(SalesLog salesLog,Integer id) {
         salesLog.setType(SalesLog.TYPE_AUTO);
+        salesLog.setContext(salesLog.getContext());
         salesLog.setSalesid(id);
 
         salesLogMapper.saveSalesLog(salesLog);

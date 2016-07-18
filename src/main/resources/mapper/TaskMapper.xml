@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhuxiaoxue.mapper.TaskMapper">
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_task (title, start, `end`, color, userid, custid, salesid, remindertime)
+        VALUES (#{title},#{start},#{end},#{color},#{userid},#{custid},#{salesid},#{remindertime})
+    </insert>
+
+    <select id="findByUserid" resultType="Task">
+        SELECT * FROM t_task WHERE userid = #{userid} and date(start) >=#{start} and date(`end`) &lt;= #{end}
+    </select>
+</mapper>

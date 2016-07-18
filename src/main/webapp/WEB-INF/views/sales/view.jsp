@@ -50,7 +50,7 @@
                     </h3>
                     <div class="box-tools">
                         <shiro:hasRole name="经理">
-                            <button class="btn btn-danger btn-xs" id="delSalesBtn">删除进度</button>
+                            <button class="btn btn-danger btn-xs" id="delSalesBtn"><i class="fa fa-trash"></i> 删除进度</button>
                         </shiro:hasRole>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                                           <i class="fa fa-history bg-blue"></i>
                                           <div class="timeline-item">
                                               <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>
-                                              <h3 class="timeline-header"><a href="#">${salesLog.context}</a> ...</h3>
+                                              <h3 class="timeline-header">${salesLog.context}</h3>
                                           </div>
                                       </li>
                                   </c:if>
@@ -98,7 +98,7 @@
                                             <i class="fa fa-weixin bg-green"></i>
                                             <div class="timeline-item">
                                                 <span class="time"><i class="fa fa-clock-o"></i><span class="timeago" title="${salesLog.createtime}"></span></span>
-                                                <h3 class="timeline-header"><a href="#">${salesLog.context}</a> ...</h3>
+                                                <h3 class="timeline-header">${salesLog.context}</h3>
                                             </div>
                                         </li>
                                     </c:if>

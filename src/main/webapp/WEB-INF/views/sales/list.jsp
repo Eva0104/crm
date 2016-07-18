@@ -73,7 +73,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">进度列表</h3>
                     <div class="box-tools">
-                        <button class="btn btn-primary btn-xs" id="addSales">新建进度表</button>
+                        <button class="btn btn-primary btn-xs" id="addSales"><i class="fa fa-plus"></i> 新建进度表</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -197,9 +197,9 @@
                 {
                     "data": function (row) {
                         if (row.progress == '交易搁置') {
-                            return "<button class='btn btn-danger'>" + row.progress + "</button>"
+                            return "<label class='label label-danger'>" + row.progress + "</label>"
                         }
-                        return "<button class='btn btn-success'>" + row.progress + "</button>"
+                        return "<label class='label label-success'>" + row.progress + "</label>"
                     }
                 },
                 {
