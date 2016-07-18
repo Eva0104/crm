@@ -12,4 +12,6 @@ public interface TaskMapper {
     List<Task> findByUserid(@Param("userid") Integer userid,@Param("start") String start, @Param("end") String end);
 
     void add(Task task);
+
+    void delByid(Integer id);
 }

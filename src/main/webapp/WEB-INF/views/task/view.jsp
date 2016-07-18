@@ -87,7 +87,7 @@
                 <form id="addForm">
                     <div class="form-group">
                         <label>事项内容</label>
-                        <input class="form-control" type="text" name="title">
+                        <input class="form-control" type="text" name="title" id="task_title">
                     </div>
                     <div class="form-group">
                         <label>开始日期</label>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group">
                         <label>提醒时间</label>
-                            <div>
+                        <div>
                             <select name="hour" style="width: 50px">
                                 <option value=""></option>
                                 <option value="1">1</option>
@@ -157,6 +157,41 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="eventModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">查看代办事项</h4>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <input type="hidden" id="eventId"/>
+                    <div class="form-group">
+                        <label>事项内容</label>
+                        <div id="eventTitle"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>开始日期~结束日期</label>
+                        <div><span id="eventStart"></span> ~ <span id="eventEnd"></span></div>
+                    </div>
+                    <div class="form-group">
+                        <label>提醒时间</label>
+                        <div id="eventRemindtime"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="delBtn"><i class="fa fa-trash"></i> 删除</button>
+                <button type="button" class="btn btn-primary" id="doneBtn"><i class="fa fa-check"></i> 标记为已完成</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 2.2.3 -->
@@ -193,31 +228,73 @@
                     backdrop: 'static'
                 });
             },
-            events:"/task/load"
+            events: "/task/load",
+            eventClick: function (calEvent, jsEvent, view) {
+
+                $("#eventId").val(calEvent.id);
+                $("#eventTitle").text(calEvent.title);
+                $("#eventStart").text(moment(calEvent.start).format("YYYY-MM-DD"));
+                $("#eventEnd").text(moment(calEvent.end).format("YYYY-MM-DD"));
+                if(calEvent.remindertime){
+                    $("#eventRemindtime").text(calEvent.remindertime);
+                }else {
+                    $("#eventRemindtime").text("无");
+                }
+                $("#eventModal").modal({
+                    show: true,
+                    backdrop: "static"
+                });
+            }
         });
 
         //新增
         $("#color").colorpicker({
-            color:'#61a5e8'
+            color: '#61a5e8'
         });
 
         $("#start_time,#end_time").datepicker({
             format: 'yyyy-mm-dd',
-            autoclose:true,
-            language:'zh-CN',
-            todayHighlight:true
+            autoclose: true,
+            language: 'zh-CN',
+            todayHighlight: true
         });
 
-        $("#saveBtn").click(function(){
-            $.post("/task/new",$("#addForm").serialize()).done(function(result){
-                if(result.state == "success"){
-                    $calendar.fullCalendar("rederEvent",result.data);
+        $("#saveBtn").click(function () {
+            if(!$("#task_title").val()) {
+                $("#task_title").focus();
+                return;
+            }
+            if(moment($("#start_time").val()).isAfter(moment($("#end_time").val()))){
+                alert("结束时间必须大于开始时间!");
+                return;
+            }
+            $.post("/task/new", $("#addForm").serialize()).done(function (result) {
+                if (result.state == "success") {
+                    $calendar.fullCalendar("rederEvent", result.data);
                     $("#addModal").modal('hide');
                 }
             }).fail(function () {
                 alert("服务器异常!");
             });
         });
+
+
+        //删除
+        $("#delBtn").click(function(){
+            var id = $("#eventId").val();
+            if(confirm("确定要删除日程吗？")){
+                $.get("/task/del/"+id).done(function(data){
+                    if(data == "success"){
+                        $calendar.fullCalendar("removeEvents",id);
+                        $("#eventModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("服务器异常!")
+                })
+            }
+        });
+
+
 
     })
 

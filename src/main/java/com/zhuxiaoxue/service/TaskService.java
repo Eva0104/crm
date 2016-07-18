@@ -28,4 +28,8 @@ public class TaskService {
         task.setUserid(ShiroUtil.getCurrentUserId());
         taskMapper.add(task);
     }
+
+    public void deltaskByid(Integer id) {
+        taskMapper.delByid(id);
+    }
 }
