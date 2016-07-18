@@ -160,7 +160,7 @@
                                 <c:forEach items="${taskList}" var="task">
                                     <li>
                                         <input type="checkbox"/>
-                                        <span class="text">${task.title} <br/>日期：${task.start}</span>
+                                        <span class="text">${task.title} <br/>执行日期：${task.start}</span>
                                         <div class="tools">
                                             <i class="fa fa-trash"></i>
                                         </div>
@@ -300,7 +300,6 @@
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/plugins/moment/moment.js"></script>
-<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
 <script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script src="/static/plugins/datepicker/bootstrap-datepicker.zh-CN.js"></script>
 <!-- AdminLTE App -->
@@ -336,10 +335,6 @@
                 show:true,
                 dropback:'static'
             });
-        });
-
-        $("#color").colorpicker({
-            color: '#61a5e8'
         });
 
         $("#start_time,#end_time").datepicker({

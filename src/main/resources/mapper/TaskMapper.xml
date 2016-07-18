@@ -25,4 +25,7 @@
     <select id="findByCustid" resultType="com.zhuxiaoxue.pojo.Task">
         select * from t_task WHERE custid = #{custid};
     </select>
+    <select id="findBySalesid" resultType="com.zhuxiaoxue.pojo.Task">
+        SELECT * FROM t_task WHERE salesid = #{salesid}
+    </select>
 </mapper>

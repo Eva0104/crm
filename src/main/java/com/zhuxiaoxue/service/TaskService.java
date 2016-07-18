@@ -50,7 +50,11 @@ public class TaskService {
         return taskMapper.findTimeOutTask(ShiroUtil.getCurrentUserId(),today);
     }
 
-    public List<Task> findTaskByCustid(Integer id) {
-        return taskMapper.findByCustid(id);
+    public List<Task> findTaskByCustid(Integer custid) {
+        return taskMapper.findByCustid(custid);
+    }
+
+    public List<Task> findTaskBySalesid(Integer salesid) {
+        return taskMapper.findBySalesid(salesid);
     }
 }

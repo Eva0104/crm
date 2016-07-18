@@ -2,15 +2,14 @@ package com.zhuxiaoxue.controller;
 
 import com.google.common.collect.Maps;
 import com.zhuxiaoxue.dto.DataTableReasult;
+import com.zhuxiaoxue.dto.JsonResult;
 import com.zhuxiaoxue.exception.ForbiddenException;
 import com.zhuxiaoxue.exception.NotFoundException;
-import com.zhuxiaoxue.pojo.Customer;
-import com.zhuxiaoxue.pojo.Sales;
-import com.zhuxiaoxue.pojo.SalesFile;
-import com.zhuxiaoxue.pojo.SalesLog;
+import com.zhuxiaoxue.pojo.*;
 import com.zhuxiaoxue.service.CustomerService;
 import com.zhuxiaoxue.service.SalesLogService;
 import com.zhuxiaoxue.service.SalesService;
+import com.zhuxiaoxue.service.TaskService;
 import com.zhuxiaoxue.util.DateUtil;
 import com.zhuxiaoxue.util.ShiroUtil;
 import com.zhuxiaoxue.util.Strings;
@@ -42,6 +41,9 @@ public class SalesController {
 
     @Value("${imagePath}")
     private String savePath;
+
+    @Inject
+    private TaskService taskService;
 
     @Inject
     private SalesLogService salesLogService;
@@ -134,6 +136,10 @@ public class SalesController {
         List<SalesFile> salesFileList = salesService.findAllFileBySalesid(id);
         model.addAttribute("salesFileList",salesFileList);
 
+        //待办事项
+        List<Task> taskList = taskService.findTaskBySalesid(id);
+        model.addAttribute("taskList",taskList);
+
         return "/sales/view";
     }
 
@@ -222,5 +228,20 @@ public class SalesController {
         salesService.delSales(id);
         return "redirect:/sales";
     }
+
+    /**
+     * 新增待办事项
+     * @param task
+     * @param hour
+     * @param min
+     * @return
+     */
+    @RequestMapping(value = "/task/new",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult addTask(Task task, String hour, String min){
+        taskService.save(task,hour,min);
+        return new JsonResult(task);
+    }
+
 
 }
