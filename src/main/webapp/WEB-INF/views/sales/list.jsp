@@ -327,6 +327,7 @@
                 $.post("/sales/add", $(form).serialize()).done(function (data) {
                     if (data == "success") {
                         $("#addModal").modal("hide");
+                        window.location.reload();
                     }
                 }).fail(function () {
                     alert("请求服务器异常！");

@@ -30,4 +30,8 @@ public interface SalesMapper {
     Long finishSalesCount(@Param("start") String start, @Param("end") String end);
 
     Float finishSalesMoney(@Param("start") String start, @Param("end") String end);
+
+    List<Map<String,Object>> loadPieData(@Param("start") String start, @Param("end") String end);
+
+    List<Map<String,Object>> totalUserMoney(@Param("start") String start, @Param("end") String end);
 }

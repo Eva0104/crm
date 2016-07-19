@@ -85,7 +85,7 @@
                     <h5 class="box-title">销售机会统计</h5>
                 </div>
                 <div class="box-body">
-                    <div id="main" style="width: 600px;height:400px;"></div>
+                    <div id="pieChart" style="width: 600px;height:400px;"></div>
                 </div>
             </div>
 
@@ -94,7 +94,7 @@
                     <h5 class="box-title">员工业绩统计</h5>
                 </div>
                 <div class="box-body">
-                    <div id="piechart" style="width: 600px;height:400px;"></div>
+                    <div id="barChart" style="width: 600px;height:400px;"></div>
                 </div>
             </div>
 
@@ -118,39 +118,54 @@
 
 <script>
     $(function(){
-        var myChart = echarts.init($("#piechart")[0]);
+
+        //柱状图
+        var mybar = echarts.init($("#barChart")[0]);
         var option = {
             tooltip: {},
             xAxis: {
-                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                data: []
             },
             yAxis: {},
             series: [{
                 name: '销量',
                 type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
+                data: []
             }]
         };
-        myChart.setOption(option);
+        mybar.setOption(option);
 
+        $.get("/chart/user/price").done(function (data) {
+            // 填入数据
+            mybar.setOption({
+                xAxis: {
+                    data: data.name
+                },
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '销量',
+                    data: data.price
+                }]
+            });
+        });
 
-        var myPie = echarts.init($("#main")[0]);
+        //饼状图
+        var myPie = echarts.init($("#pieChart")[0]);
         var option = {
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['完成交易','初次接触','提供合同','确认意向','交易搁置']
+            },
             series: [
                 {
-                    name: '访问来源',
+                    name: '销售机会',
                     type: 'pie',
-                    data: [
-                        {value: 335, name: '直接访问'},
-                        {value: 310, name: '邮件营销'},
-                        {value: 234, name: '联盟广告'},
-                        {value: 135, name: '视频广告'},
-                        {value: 1548, name: '搜索引擎'}
-                    ],
+                    data: [],
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
@@ -162,8 +177,17 @@
             ]
         };
         myPie.setOption(option);
+        $.get("/chart/progress/data").done(function (data) {
+            // 填入数据
+            myPie.setOption({
+                series: [{
+                    data: data
+                }]
+            });
 
-    })
+        });
+
+    });
 
 </script>
 
