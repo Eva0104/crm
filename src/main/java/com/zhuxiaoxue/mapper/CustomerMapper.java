@@ -1,6 +1,7 @@
 package com.zhuxiaoxue.mapper;
 
 import com.zhuxiaoxue.pojo.Customer;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +34,6 @@ public interface CustomerMapper {
     List<Customer> findCustomerByUserId(Integer userid);
 
     List<Customer> findAllCustomer();
+
+    Long newCustomerCount(@Param("start") String start, @Param("end") String end);
 }

@@ -25,7 +25,8 @@
                 (userid = #{userid} or (userid ='' or userid is null))
             </if>
             <if test="keyword != null and keyword !=''">
-                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like concat('%',#{keyword},'%'))
+                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like
+                concat('%',#{keyword},'%'))
             </if>
         </where>
         order by id desc
@@ -38,7 +39,8 @@
                 userid = #{userid} or (userid ='' or userid is null)
             </if>
             <if test="keyword">
-                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like concat('%',#{keyword},'%'))
+                and (name like concat('%',#{keyword},'%') or pinyin like concat('%',#{keyword},'%') or tel like
+                concat('%',#{keyword},'%'))
             </if>
         </where>
         order by id desc
@@ -69,6 +71,10 @@
 
     <select id="findAllCustomer" resultType="com.zhuxiaoxue.pojo.Customer">
         SELECT * FROM t_customer
+    </select>
+
+    <select id="newCustomerCount" resultType="long">
+        SELECT COUNT(*) FROM t_customer WHERE date(createtime) >= #{start} and date(createtime) &lt;= #{end}
     </select>
 
 </mapper>

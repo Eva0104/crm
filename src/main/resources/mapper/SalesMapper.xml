@@ -72,4 +72,12 @@
         select * from t_sales WHERE custid = #{id};
     </select>
 
+    <select id="finishSalesCount" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM t_sales WHERE progress = "完成交易" AND date(successtime) >= #{start} and date(successtime) &lt;= #{end}
+    </select>
+
+    <select id="finishSalesMoney" resultType="java.lang.Float">
+        SELECT sum(price) FROM t_sales WHERE progress = "完成交易" AND date(successtime) >= #{start} and date(successtime) &lt;= #{end}
+    </select>
+
 </mapper>

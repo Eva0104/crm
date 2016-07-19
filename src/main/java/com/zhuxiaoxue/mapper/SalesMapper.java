@@ -1,6 +1,7 @@
 package com.zhuxiaoxue.mapper;
 
 import com.zhuxiaoxue.pojo.Sales;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,8 @@ public interface SalesMapper {
     void delByid(Integer id);
 
     List<Sales> findSalesByCustid(Integer id);
+
+    Long finishSalesCount(@Param("start") String start, @Param("end") String end);
+
+    Float finishSalesMoney(@Param("start") String start, @Param("end") String end);
 }
